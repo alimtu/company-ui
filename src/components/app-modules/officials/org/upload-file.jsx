@@ -30,8 +30,6 @@ export default function CropImageeee() {
   const [crop, setCrop] = useState({ unit: "%", width: 30, aspect: 16 / 9 });
   const [completedCrop, setCompletedCrop] = useState(null);
 
-  console.log("ali");
-
   const onSelectFile = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const reader = new FileReader();
@@ -83,7 +81,6 @@ export default function CropImageeee() {
       <div>
         <input type="file" accept="image/*" onChange={onSelectFile} />
       </div>
-      {console.log(upImg)}
       <ReactCrop
         src={upImg}
         onImageLoaded={onLoad}

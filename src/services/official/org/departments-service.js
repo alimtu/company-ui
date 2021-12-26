@@ -22,8 +22,6 @@ async function getMembersByDepartmentID(departmentID) {
 async function getParams() {
   const { data } = await http.get(`${apiEndpoint}/params`);
 
-  console.log(data);
-
   return data;
 }
 

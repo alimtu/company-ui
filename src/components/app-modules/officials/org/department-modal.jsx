@@ -74,8 +74,6 @@ const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
 
     const data = await departmentsService.getParams();
 
-    console.log("Data --> ", data);
-
     setParentDepartments(
       data.filter((d) => d.ParentDepartmentID !== record.DepartmentID)
     );

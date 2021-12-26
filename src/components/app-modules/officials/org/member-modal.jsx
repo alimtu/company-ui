@@ -191,8 +191,6 @@ const handleSubmitWithFile = async (
     schema,
   } = formConfig;
 
-  console.log(fileList);
-
   if (!hasFormError(errors)) {
     setProgress(true);
 
@@ -219,7 +217,6 @@ const handleSubmitWithFile = async (
       message.success(Words.messages.success_submit);
     } catch (ex) {
       handleError(ex);
-      console.log(ex);
     } finally {
       setProgress(false);
       // this.setState({ inProgress: false });
