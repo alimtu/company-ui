@@ -10,7 +10,6 @@ import NotFoundPage from "./pages/not-found-page";
 import { PageContextProvider } from "./components/contexts/page-context";
 import { ModalContextProvider } from "./components/contexts/modal-context";
 import composeComponents from "react-component-composer";
-import CropImageeee from "./components/app-modules/officials/org/upload-file";
 
 const Providers = composeComponents(PageContextProvider, ModalContextProvider);
 
@@ -19,7 +18,6 @@ const App = () => {
     <Providers>
       <Switch>
         <Route path="/login" component={LoginPage} />
-        <Route path="/crop" component={CropImageeee} />
         <Route path="/logout" component={LogoutPage} />
         <ProtectedRoute path="/home" component={HomePage} />
         <Redirect from="/" exact to="/home" />

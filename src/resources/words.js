@@ -105,6 +105,8 @@ class Words extends Component {
   static users = "اعضا";
   static no_user = "بدون عضو";
   static submit_crop = "ثبت تصویر برش داده شده";
+  static please_wait = "لطفا صبر کنید ...";
+  static please_wait_for_load_image = "لطفا تا بارگذاری تصویر شکیبا باشید ...";
 
   //------------------------------
   static descriptions = "توضیحات";
