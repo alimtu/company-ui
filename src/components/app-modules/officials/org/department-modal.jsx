@@ -61,6 +61,7 @@ const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
 
   const clearRecord = () => {
     record.DepartmentTitle = "";
+    record.ParentDepartmentID = 0;
 
     setRecord(record);
     setErrors({});
@@ -89,20 +90,23 @@ const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     );
   };
 
-  const handleKeyPress = useCallback((event) => {
-    switch (event.key) {
-      case "F2":
-        clearRecord();
-        break;
-      case "F11":
-        if (!(validateForm({ record, schema }) && true)) {
-          handleSubmit();
-        } else {
-          return "";
-        }
-        break;
-    }
-  }, []);
+  const handleKeyPress = useCallback(
+    (event) => {
+      switch (event.key) {
+        case "Shift":
+          clearRecord();
+          break;
+        case "F11":
+          if (!(validateForm({ record, schema }) && true)) {
+            handleSubmit();
+          } else {
+            return "";
+          }
+          break;
+      }
+    },
+    [record, schema]
+  );
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
