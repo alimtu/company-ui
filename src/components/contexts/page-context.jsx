@@ -1,10 +1,24 @@
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useEffect } from "react";
+import memberService from "../../services/official/org/members-service";
+import { message } from "antd";
+import authService from "../../services/auth-service";
 
 const PageContext = createContext();
 
 const usePageContext = () => useContext(PageContext);
 
 const PageContextProvider = ({ children }) => {
+  useEffect(async () => {
+    try {
+      if (localStorage.getItem("token")) {
+        setPicFileName(await memberService.getPicFileName());
+        setMemberInfo(authService.getCurrentUser());
+      }
+    } catch (error) {
+      message.error(error);
+    }
+  }, []);
+
   const [progress, setProgress] = useState(false);
   const [searched, setSearched] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -14,6 +28,8 @@ const PageContextProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [searchFocus, setSearchFocus] = useState(false);
+  const [picFileName, setPicFileName] = useState("");
+  const [memberInfo, setMemberInfo] = useState({});
 
   const contextValue = {
     progress,
@@ -34,6 +50,8 @@ const PageContextProvider = ({ children }) => {
     setShowDetails,
     searchFocus,
     setSearchFocus,
+    picFileName,
+    memberInfo,
   };
 
   return (

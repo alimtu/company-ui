@@ -210,3 +210,10 @@
 .scrolling-wrapper-flexbox .card {
   flex: 0 0 auto;
 }
+
+.colAntd:hover {
+  background-color: #d3eef9;
+}
+.buttonAntd:hover {
+  background-color: #b27ad8;
+}

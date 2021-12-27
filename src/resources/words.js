@@ -107,6 +107,8 @@ class Words extends Component {
   static submit_crop = "ثبت تصویر برش داده شده";
   static please_wait = "لطفا صبر کنید ...";
   static please_wait_for_load_image = "لطفا تا بارگذاری تصویر شکیبا باشید ...";
+  static see_profile = "مشاهده حساب کاربری";
+  static logout_from_account = "خروج از حساب کاربری";
 
   //------------------------------
   static descriptions = "توضیحات";

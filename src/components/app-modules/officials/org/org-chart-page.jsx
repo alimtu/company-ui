@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import { useMount } from "react-use";
 import service from "./../../../../services/official/org/departments-service";
 import { OrganizationGraph } from "@ant-design/charts";
+//---
 import { fileBasicUrl } from "../../../../config.json";
 import utils from "../../../../tools/utils";
 import DepartmentMembersModal from "./department-members-modal";
 import Words from "../../../../resources/words";
+//---
 
 const OrgChartPage = () => {
   const [departments, setDepartments] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [depID, setDepID] = useState();
-  const [depTitle, setDepTitle] = useState("");
+  const [departmentID, setDepartmentID] = useState(0);
+  const [departmentTitle, setDepartmentTitle] = useState("");
 
   useMount(async () => {
     const data = await service.getAllData();
@@ -20,8 +22,8 @@ const OrgChartPage = () => {
   });
 
   const handleShowModal = (departmentID, departmentTitle) => {
-    setDepTitle(departmentTitle);
-    setDepID(departmentID);
+    setDepartmentTitle(departmentTitle);
+    setDepartmentID(departmentID);
     setShowModal(true);
   };
 
@@ -41,13 +43,7 @@ const OrgChartPage = () => {
   const getAntdNodes = (department, depList) => {
     let children = [];
 
-    const {
-      DepartmentID,
-      DepartmentTitle,
-      PicFileName,
-      CountMembers,
-      FullName,
-    } = department;
+    let { DepartmentID, DepartmentTitle, Manager, EmployeesCount } = department;
 
     const subDepartments = depList.filter(
       (d) => d.ParentDepartmentID === DepartmentID
@@ -57,13 +53,15 @@ const OrgChartPage = () => {
       children = [...children, getAntdNodes(dep, depList)];
     });
 
+    Manager = JSON.parse(Manager);
+
     return {
       id: `${DepartmentID}`,
       value: {
-        text: DepartmentTitle,
-        image: PicFileName,
-        countMembers: CountMembers,
-        fullName: FullName,
+        text: utils.farsiNum(DepartmentTitle),
+        image: Manager?.PicFileName || "",
+        employeesCount: EmployeesCount,
+        fullName: Manager ? `${Manager.FirstName} ${Manager.LastName}` : "",
       },
       children,
     };
@@ -85,18 +83,17 @@ const OrgChartPage = () => {
                 alignItems: "center",
               };
             },
-
             size: [260, 100],
             customContent: (item, group, cfg) => {
               const { startX, startY, width } = cfg;
-              const { text, fullName, image, countMembers } = item;
+              const { text, image, fullName, employeesCount } = item;
 
-              const textShape =
+              const textShape1 =
                 text &&
                 group?.addShape("text", {
                   attrs: {
                     x: startX + width / 2,
-                    y: startY + 20,
+                    y: startY + 25,
                     text,
                     fill: "black",
                     textAlign: "center",
@@ -104,11 +101,13 @@ const OrgChartPage = () => {
                     alignItems: "center",
                     backgroundColor: "black",
                     fontFamily: "Yekan",
+                    fontSize: 20,
                     fontWeight: "bolder",
                   },
                   // Unique field within group
                   name: `text-${Math.random()}`,
                 });
+
               const textShape2 =
                 text &&
                 group?.addShape("text", {
@@ -116,9 +115,9 @@ const OrgChartPage = () => {
                     x: image ? startX + width / 2 - 30 : startX + width / 2,
                     y: startY + 50,
                     text:
-                      fullName.length > 0
-                        ? `${Words.manager} : ${fullName}`
-                        : Words.no_manager,
+                      fullName?.length > 0
+                        ? `${Words.department_manager} : ${fullName}`
+                        : Words.no_department_manager,
                     fill: "black",
                     textAlign: "center",
                     justifyContent: "center",
@@ -132,45 +131,48 @@ const OrgChartPage = () => {
                   // Unique field within group
                   name: `text2-${Math.random()}`,
                 });
-              const textShape3 =
-                countMembers &&
-                group?.addShape("text", {
-                  attrs: {
-                    x:
-                      image.length > 0
-                        ? startX + width / 2 - 30
-                        : startX + width / 2,
-                    y: startY + 70,
-                    text:
-                      countMembers > 0
-                        ? `${Words.users} : ${utils.farsiNum(countMembers)} ${
-                            Words.person
-                          }`
-                        : Words.no_user,
-                    fill: "black",
-                    textAlign: "center",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    fontFamily: "Yekan",
-                  },
-                  // Unique field within group
-                  name: `text3-${Math.random()}`,
-                });
+
+              const textShape3 = group?.addShape("text", {
+                attrs: {
+                  x:
+                    image.length > 0
+                      ? startX + width / 2 - 30
+                      : startX + width / 2,
+                  y: startY + 70,
+                  text:
+                    employeesCount > 0
+                      ? `${Words.employees} : ${utils.farsiNum(
+                          employeesCount
+                        )} ${Words.nafar}`
+                      : Words.no_employee,
+                  fill: "black",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontFamily: "Yekan",
+                },
+                // Unique field within group
+                name: `text3-${Math.random()}`,
+              });
+
               const textShape4 =
                 text &&
                 group?.addShape("image", {
                   attrs: {
-                    x: startX + 170,
+                    x: startX + 180,
                     y: startY + 23,
                     width: 60,
                     height: 60,
-                    img: `${fileBasicUrl}/${"member-profiles"}/${image}`,
+                    img: image
+                      ? `${fileBasicUrl}/${"member-profiles"}/${image}`
+                      : "",
                   },
                   // Unique field within group
                   name: `text4-${Math.random()}`,
                 });
+
               return Math.max(
-                textShape?.getBBox().height ?? 0,
+                textShape1?.getBBox().height ?? 0,
                 textShape2?.getBBox().height ?? 0,
                 textShape3?.getBBox().height ?? 0,
                 textShape4?.getBBox().height ?? 0
@@ -206,14 +208,15 @@ const OrgChartPage = () => {
           }}
         />
       )}
+
       {showModal && (
         <DepartmentMembersModal
           onOk={() => {
             setShowModal(false);
           }}
           isOpen={showModal}
-          departmentID={depID}
-          departmentTitle={depTitle}
+          departmentID={departmentID}
+          departmentTitle={departmentTitle}
         />
       )}
     </>
