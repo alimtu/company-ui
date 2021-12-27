@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useMount } from "react-use";
 import { Form, Row, Col } from "antd";
 import Joi from "joi-browser";
@@ -89,6 +89,28 @@ const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     );
   };
 
+  const handleKeyPress = useCallback((event) => {
+    switch (event.key) {
+      case "F2":
+        clearRecord();
+        break;
+      case "F11":
+        if (!(validateForm({ record, schema }) && true)) {
+          handleSubmit();
+        } else {
+          return "";
+        }
+        break;
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
   const isEdit = selectedObject !== null;
 
   return (
@@ -110,6 +132,7 @@ const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
               keyColumn="ParentDepartmentID"
               valueColumn="ParentDepartmentTitle"
               formConfig={formConfig}
+              autoFocus
             />
           </Col>
           <Col xs={24}>

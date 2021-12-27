@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import { useMount } from "react-use";
 import { Spin, Row, Col, Typography } from "antd";
 import Words from "../../../../resources/words";
@@ -74,6 +74,9 @@ const DepartmentsPage = ({ pageName }) => {
     setAccess,
     selectedObject,
     showModal,
+    searchFocus,
+    setSearchFocus,
+    setShowModal,
   } = usePageContext();
 
   useMount(async () => {
@@ -101,6 +104,32 @@ const DepartmentsPage = ({ pageName }) => {
 
   //------
 
+  const handleKeyPress = useCallback((event) => {
+    switch (event.key) {
+      case "F2":
+        !showModal && setRecords([]);
+        break;
+      case "F3":
+        setSearchFocus(true);
+        break;
+      case "Escape":
+        setSearchFocus(false);
+        break;
+      case "F10":
+        setShowModal(true);
+        break;
+      default:
+        break;
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
   return (
     <>
       <Spin spinning={progress}>
@@ -115,6 +144,7 @@ const DepartmentsPage = ({ pageName }) => {
             onClear={() => setRecords([])}
             onGetAll={handleGetAll}
             onAdd={access?.CanAdd && handleAdd}
+            searchFocus={searchFocus}
           />
 
           <Col xs={24}>
