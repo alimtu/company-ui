@@ -64,9 +64,9 @@ const CropImage = ({ src, parentCallback }) => {
     );
   }, [completedCrop]);
 
-  const compressImage = async (file, useWebWorker, size) => {
+  const compressImage = async (file, useWebWorker) => {
     var options = {
-      maxSizeMB: 0.15,
+      maxSizeMB: 0.13, //correct is 0.15 but For Package tolerance that is 0.13
       maxWidthOrHeight: 1024,
       useWebWorker,
     };
@@ -96,7 +96,7 @@ const CropImage = ({ src, parentCallback }) => {
         });
 
         if (file.size > 150000) {
-          let compressFile = await compressImage(file, true, file.size);
+          let compressFile = await compressImage(file, true);
           compressFile = new File([compressFile], src.name, {
             type: "image/png",
           });
