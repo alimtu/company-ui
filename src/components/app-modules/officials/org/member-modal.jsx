@@ -1,6 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useMount } from "react-use";
-import { Form, Row, Col, message, Button, Avatar, Space, Tooltip } from "antd";
+import {
+  Form,
+  Row,
+  Col,
+  message,
+  Button,
+  Avatar,
+  Space,
+  Tooltip,
+  Spin,
+  Typography,
+} from "antd";
 import {
   UserOutlined as UserIcon,
   CloseOutlined as RemoveIcon,
@@ -37,6 +48,7 @@ import {
   useResetContext,
 } from "./../../../contexts/modal-context";
 import CropImage from "./crop-image";
+import imageCompression from "browser-image-compression";
 
 const schema = {
   MemberID: Joi.number().required(),
@@ -225,6 +237,9 @@ const handleSubmitWithFile = async (
 };
 
 const MemberModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
+  const [showCropSection, setShowCropSection] = useState(false);
+  const [showCropedImage, setShowCropedImage] = useState(false);
+
   const {
     progress,
     setProgress,
@@ -240,6 +255,8 @@ const MemberModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     setSelectedProvinceID,
     cities,
     setCities,
+    setFirstImage,
+    firstImage,
   } = useModalContext();
 
   const resetContext = useResetContext();
@@ -272,10 +289,12 @@ const MemberModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     record.Password = "";
     record.IsActive = true;
 
+    loadFieldsValue(formRef, record);
     setFileList({});
     setRecord(record);
     setErrors({});
-    loadFieldsValue(formRef, record);
+    setFirstImage("");
+    setShowCropedImage(false);
   };
 
   useMount(async () => {
@@ -298,10 +317,28 @@ const MemberModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
   }, []);
 
   useEffect(() => {
+    Object.keys(fileList).length > 0
+      ? setShowCropSection(true)
+      : setShowCropSection(false);
+  }, [fileList]);
+
+  useEffect(() => {
     loadFieldsValue(formRef, record);
   });
 
   const handleSubmit = async () => {
+    if (Object.keys(fileList).length > 0) {
+      if (fileList.PicFileName.size > 153600) {
+        let compressFile = await compressImage(fileList.PicFileName, true);
+        compressFile = new File([compressFile], fileList.PicFileName.name, {
+          type: "image/png",
+        });
+        setFileList({ PicFileName: compressFile });
+
+        formConfig.fileList = { PicFileName: compressFile };
+      }
+    }
+    setShowCropedImage(false);
     handleSubmitWithFile(
       fileConfig,
       formConfig,
@@ -359,6 +396,30 @@ const MemberModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
       .regex(/^[a-zA-Z0-9.\-()\s]+$/)
       .label(Words.password);
   }
+
+  const compressImage = async (file, useWebWorker) => {
+    var options = {
+      maxSizeMB: 0.13, //correct is 0.15 but For Package tolerance that is 0.13
+      maxWidthOrHeight: 1024,
+      useWebWorker,
+    };
+    try {
+      setProgress(true);
+      const output = await imageCompression(file, options);
+      setProgress(false);
+
+      return output;
+    } catch (error) {
+      setProgress(false);
+      message.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (Object.keys(firstImage).length === 0) {
+      setFirstImage(fileList);
+    }
+  }, [fileList, firstImage]);
 
   return (
     <ModalWindow
@@ -559,6 +620,7 @@ const MemberModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
                   fieldName="PicFileName"
                   formConfig={formConfig}
                   fileConfig={fileConfig}
+                  setFirstImage={setFirstImage}
                 />
               </Col>
             </>
@@ -573,9 +635,56 @@ const MemberModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
                 fieldName="PicFileName"
                 formConfig={formConfig}
                 fileConfig={fileConfig}
+                setFirstImage={setFirstImage}
               />
             </Col>
           )}
+
+          {!showCropSection && showCropedImage && (
+            <Col md={24}>
+              <Row align="middle" gutter={30}>
+                <Col>
+                  <Row
+                    style={{ marginRight: "5px" }}
+                    align="middle"
+                    gutter={10}
+                  >
+                    <Col>
+                      <Avatar
+                        size={85}
+                        src={
+                          Object.keys(fileList).length > 0
+                            ? URL.createObjectURL(fileList.PicFileName)
+                            : ""
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <Tooltip title={Words.re_cut}>
+                        <Button
+                          shape="circle"
+                          icon={<ReloadIcon />}
+                          style={{ color: Colors.green[6] }}
+                          onClick={() => setShowCropSection(true)}
+                        />
+                      </Tooltip>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+          )}
+
+          <Spin spinning={progress} tip={Words.please_wait}>
+            {Object.keys(fileList).length > 0 && showCropSection && (
+              <CropImage
+                src={firstImage.PicFileName}
+                parentCallback={handleCallback}
+                setShowCropSection={setShowCropSection}
+                setShowCropedImage={setShowCropedImage}
+              />
+            )}
+          </Spin>
 
           {isEdit && (
             <>
@@ -597,12 +706,6 @@ const MemberModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
                 />
               </Col>
             </>
-          )}
-          {Object.keys(fileList).length > 0 && (
-            <CropImage
-              src={fileList.PicFileName}
-              parentCallback={handleCallback}
-            />
           )}
         </Row>
       </Form>

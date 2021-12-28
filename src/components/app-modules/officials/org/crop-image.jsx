@@ -5,25 +5,34 @@ import { Row, Col, Button, Spin, message } from "antd";
 import Words from "../../../../resources/words";
 import imageCompression from "browser-image-compression";
 
-const CropImage = ({ src, parentCallback }) => {
+const CropImage = ({
+  src,
+  parentCallback,
+  setShowCropSection,
+  setShowCropedImage,
+}) => {
   const imgRef = useRef(null);
   const [upImg, setUpImg] = useState();
   const [inProgress, setInProgress] = useState(false);
   const previewCanvasRef = useRef(null);
   const [completedCrop, setCompletedCrop] = useState(null);
+
   const [crop, setCrop] = useState({
-    unit: "%",
-    width: 40,
-    height: 50,
-    x: 25,
-    y: 25,
+    unit: "px",
+    width: 100,
+    height: 100,
+    x: 100,
+    y: 30,
     aspect: 1 / 1,
   });
 
-  const onLoad = useCallback((img) => {
-    imgRef.current = img;
-    message.info(Words.please_wait_for_load_image, 1);
-  }, []);
+  const onLoad = useCallback(
+    (img) => {
+      imgRef.current = img;
+      message.info(Words.please_wait_for_load_image, 1);
+    },
+    [src]
+  );
 
   useEffect(() => {
     if (src) {
@@ -62,7 +71,7 @@ const CropImage = ({ src, parentCallback }) => {
       crop.width * scaleX,
       crop.height * scaleY
     );
-  }, [completedCrop]);
+  }, [src, completedCrop]);
 
   const compressImage = async (file, useWebWorker) => {
     var options = {
@@ -89,25 +98,29 @@ const CropImage = ({ src, parentCallback }) => {
     if (!crop || !canvas) {
       return;
     }
-    canvas.toBlob(
+    await canvas.toBlob(
       async (blob) => {
         var file = new File([blob], src.name, {
           type: "image/png",
         });
 
-        if (file.size > 150000) {
+        if (file.size > 153600) {
           let compressFile = await compressImage(file, true);
           compressFile = new File([compressFile], src.name, {
             type: "image/png",
           });
-          if (compressFile.size > 150000) {
+          if (compressFile.size > 153600) {
             message.error(Words.limit_upload_file_size);
           } else {
             onTrigger(compressFile);
+            setShowCropSection(false);
+            setShowCropedImage(true);
           }
           // return message.error(Words.limit_upload_file_size);
         } else {
           onTrigger(file);
+          setShowCropSection(false);
+          setShowCropedImage(true);
         }
       },
       "image/png",
