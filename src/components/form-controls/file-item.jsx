@@ -96,7 +96,10 @@ const FileItem = ({
       )}
     >
       <>
-        <Upload {...props} onChange={() => setFirstImage({})}>
+        <Upload
+          {...props}
+          onChange={setFirstImage ? () => setFirstImage({}) : null}
+        >
           <Button icon={<UploadIcon />}>{Words.select_file}</Button>
         </Upload>
 

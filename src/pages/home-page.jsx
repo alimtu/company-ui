@@ -35,61 +35,35 @@ const { Header, Content, Footer, Sider } = Layout;
 const MainHeader = ({ mobileView, trigger, history }) => {
   const { picFileName, memberInfo } = usePageContext();
   const { FirstName, LastName } = memberInfo;
+
   const content = (
-    <Row gutter={[5, 10]} style={{ display: "flex", flexDirection: "column" }}>
-      <Col className="colAntd">
-        <Row align="middle" gutter={[10, 5]}>
-          <Col>
-            <MemberProfileImage fileName={picFileName} />
-          </Col>
-          <Col>
-            <Row style={{ display: "flex", flexDirection: "column" }}>
-              <Col>
-                {" "}
-                <Title
-                  level={5}
-                  style={{ fontWeight: "normal" }}
-                >{`${FirstName}  ${LastName}`}</Title>
-              </Col>
-              <Col>
-                <Text>
-                  <Link style={{ display: "flex", alignItems: "center" }}>
-                    {Words.see_profile} <BiCaretLeft />
-                  </Link>
-                </Text>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Col>
+    <Space direction="vertical" align="start">
+      <Space align="center" className="spaceAntd">
+        <MemberProfileImage fileName={picFileName} />
+        <Space align="start" direction="vertical">
+          <Text
+            style={{ fontWeight: "normal" }}
+          >{`${FirstName}  ${LastName}`}</Text>
+          <Text>
+            <Link style={{ display: "flex", alignItems: "center" }}>
+              {Words.see_profile} <BiCaretLeft />
+            </Link>
+          </Text>
+        </Space>
+      </Space>
       <Divider style={{ margin: "0px" }} />
-      <Col
-        className="colAntd"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Row gutter={[10]} align="middle">
-          <Col>
-            {" "}
-            <IoLogOutOutline style={{ fontSize: "20px", marginTop: "7px" }} />
-          </Col>
-          <Col>
-            {" "}
-            <Title
-              level={5}
-              style={{ fontWeight: "normal", cursor: "pointer" }}
-              onClick={() => history.push("/logout")}
-            >
-              {Words.logout_from_account}
-            </Title>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+      <Space align="center" className="spaceAntd">
+        <IoLogOutOutline style={{ fontSize: "20px", marginTop: "7px" }} />
+        <Text
+          style={{ fontWeight: "normal", cursor: "pointer" }}
+          onClick={() => history.push("/logout")}
+        >
+          {Words.logout_from_account}
+        </Text>
+      </Space>
+    </Space>
   );
+
   return (
     <Header
       style={{
@@ -141,17 +115,9 @@ const MainHeader = ({ mobileView, trigger, history }) => {
       </div>
 
       <Popover content={content} placement="bottomLeft">
-        <Button type="link" className="buttonAntd">
-          <Row style={{ color: "white" }} align="middle">
-            <Col>
-              <HiOutlineUser
-                style={{ fontSize: "25px", fontWeight: "normal" }}
-              />
-            </Col>
-            <Col>
-              <BiCaretDown style={{ fontSize: "20px", fontWeight: "normal" }} />
-            </Col>
-          </Row>
+        <Button type="link" className="buttonAntd" style={{ color: "white" }}>
+          <HiOutlineUser style={{ fontSize: "25px", fontWeight: "normal" }} />
+          <BiCaretDown style={{ fontSize: "20px", fontWeight: "normal" }} />
         </Button>
       </Popover>
     </Header>
