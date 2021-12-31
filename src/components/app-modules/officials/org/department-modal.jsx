@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import { useMount } from "react-use";
 import { Form, Row, Col } from "antd";
 import Joi from "joi-browser";
@@ -40,14 +40,8 @@ const formRef = React.createRef();
 const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
   const [parentDepartments, setParentDepartments] = useState([]);
 
-  const {
-    progress,
-    setProgress,
-    record,
-    setRecord,
-    errors,
-    setErrors,
-  } = useModalContext();
+  const { progress, setProgress, record, setRecord, errors, setErrors } =
+    useModalContext();
 
   const resetContext = useResetContext();
 
@@ -61,7 +55,6 @@ const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
 
   const clearRecord = () => {
     record.DepartmentTitle = "";
-    record.ParentDepartmentID = 0;
 
     setRecord(record);
     setErrors({});
@@ -90,31 +83,6 @@ const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     );
   };
 
-  const handleKeyPress = useCallback(
-    (event) => {
-      switch (event.key) {
-        case "Shift":
-          clearRecord();
-          break;
-        case "F11":
-          if (!(validateForm({ record, schema }) && true)) {
-            handleSubmit();
-          } else {
-            return "";
-          }
-          break;
-      }
-    },
-    [record, schema]
-  );
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress);
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [handleKeyPress]);
-
   const isEdit = selectedObject !== null;
 
   return (
@@ -128,15 +96,15 @@ const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
       onCancel={onCancel}
     >
       <Form ref={formRef} name="dataForm">
-        <Row gutter={1}>
+        <Row gutter={[5, 1]} style={{ marginLeft: 1 }}>
           <Col xs={24}>
             <DropdownItem
               title={Words.parent_department}
               dataSource={parentDepartments}
               keyColumn="ParentDepartmentID"
               valueColumn="ParentDepartmentTitle"
-              formConfig={formConfig}
               autoFocus
+              formConfig={formConfig}
             />
           </Col>
           <Col xs={24}>

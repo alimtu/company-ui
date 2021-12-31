@@ -18,9 +18,9 @@ import { VscUngroupByRefType as DutyLevelIcon } from "react-icons/vsc";
 import { GoTasklist as DutyIcon } from "react-icons/go";
 import { Link } from "react-router-dom";
 import { useMount } from "react-use";
-import modulesService from "../../services/app/modules-service";
-import Colors from "./../../resources/colors";
-import Words from "./../../resources/words";
+import modulesService from "../../../services/app/modules-service";
+import Colors from "./../../../resources/colors";
+import Words from "./../../../resources/words";
 import { useLocation } from "react-router-dom";
 
 const iconSize = 20;
@@ -94,9 +94,11 @@ const mapper = (pageID) => {
   return { link, icon };
 };
 
-const OrgMenu = (props) => {
+const OrgMenu = () => {
   const [accessiblePages, setAccessiblePages] = useState([]);
   const [lastPathKey, setLastPathKey] = useState("");
+
+  const currentLocation = useLocation();
 
   useMount(async () => {
     const org_module_id = 2;
@@ -106,12 +108,12 @@ const OrgMenu = (props) => {
   });
 
   useEffect(() => {
-    const pathKeys = props.location.pathname.split("/");
+    const pathKeys = currentLocation.pathname.split("/");
     const _lastPathKey = pathKeys[pathKeys.length - 1]
       .replace("-", "")
       .toLocaleLowerCase();
     setLastPathKey(_lastPathKey);
-  }, [props.location.pathname]);
+  }, [currentLocation.pathname]);
 
   const org_module_path_name = "org";
   const isEndsWithModuleName = useLocation().pathname.endsWith(

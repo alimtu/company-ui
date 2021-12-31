@@ -204,7 +204,7 @@ export const getColumns = (
           <Space>
             {getOperationalButtons && getOperationalButtons(record)}
 
-            {CanEdit && (
+            {CanEdit && onEdit && (
               <Button
                 type="link"
                 icon={<EditIcon />}
@@ -212,7 +212,7 @@ export const getColumns = (
               />
             )}
 
-            {CanDelete && (
+            {CanDelete && onDelete && (
               <Popconfirm
                 title={Words.questions.sure_to_delete_item}
                 onConfirm={async () => await onDelete(record)}

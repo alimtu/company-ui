@@ -271,6 +271,16 @@ export function dayNameFromText(day) {
   );
 }
 
+export function weekDayNameFromText(day) {
+  const miladiDay = jalaliMoment
+    .from(`${day}`, "fa", "YYYYMMDD")
+    .format("YYYY/MM/DD");
+
+  return farsiNum(
+    jalaliMoment(miladiDay, "YYYY/MM/DD").locale("fa").format("dddd")
+  );
+}
+
 export function dateToText(date) {
   return `${date.year}${addFirstZero(`${date.month}`)}${addFirstZero(
     `${date.day}`
@@ -433,6 +443,7 @@ const methods = {
   getPersianDate,
   dayName,
   dayNameFromText,
+  weekDayNameFromText,
   dateToText,
   persianTime,
   formattedTime,

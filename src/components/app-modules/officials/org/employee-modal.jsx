@@ -132,7 +132,7 @@ const EmployeeModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
       onCancel={onCancel}
     >
       <Form ref={formRef} name="dataForm">
-        <Row gutter={[5, 1]}>
+        <Row gutter={[5, 1]} style={{ marginLeft: 1 }}>
           {isEdit && (
             <>
               <Col
@@ -160,11 +160,13 @@ const EmployeeModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
                 valueColumn="FullName"
                 formConfig={formConfig}
                 required
+                autoFocus
                 loading={memberSearchProgress}
                 onSearch={handleSearchMembers}
               />
             </Col>
           )}
+
           <Col xs={24}>
             <DropdownItem
               title={Words.department}
@@ -173,6 +175,7 @@ const EmployeeModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
               valueColumn="DepartmentTitle"
               formConfig={formConfig}
               required
+              autoFocus={isEdit}
             />
           </Col>
           <Col xs={24}>

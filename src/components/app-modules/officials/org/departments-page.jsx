@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React from "react";
 import { useMount } from "react-use";
 import { Spin, Row, Col, Typography } from "antd";
 import Words from "../../../../resources/words";
@@ -74,9 +74,6 @@ const DepartmentsPage = ({ pageName }) => {
     setAccess,
     selectedObject,
     showModal,
-    searchFocus,
-    setSearchFocus,
-    setShowModal,
   } = usePageContext();
 
   useMount(async () => {
@@ -104,78 +101,6 @@ const DepartmentsPage = ({ pageName }) => {
 
   //------
 
-  const handleKeyPress = useCallback(
-    (event) => {
-      if (!showModal) {
-        switch (event.key) {
-          case "ArrowUp":
-            setRecords([]);
-            break;
-          case "ArrowRight":
-            setSearchFocus(true);
-            break;
-          case "Escape":
-            setSearchFocus(false);
-            break;
-          case "ArrowLeft":
-            setSearchFocus(false);
-            setShowModal(true);
-            break;
-          case "ArrowDown":
-            if (access?.CanAdd) {
-              handleGetAll();
-            } else {
-              return "";
-            }
-            break;
-          default:
-            break;
-        }
-      }
-    },
-    [showModal, access]
-  );
-
-  // const handleKeyPress = useCallback((event) => {
-  //   keysPressed[event.key] = true;
-
-  //   if (event.key === "Escape") {
-  //     setSearchFocus(false);
-  //   }
-
-  //   if (keysPressed["Control"]) {
-  //     switch (event.key) {
-  //       case "F2":
-  //         !showModal && setRecords([]);
-  //         keysPressed = {};
-  //         break;
-  //       case "F3":
-  //         setSearchFocus(true);
-  //         keysPressed = {};
-  //         break;
-  //       case "F6":
-  //         handleGetAll(true);
-  //         keysPressed = {};
-  //         break;
-  //       case "F10":
-  //         if (access?.CanAdd) {
-  //           setShowModal(true);
-  //           keysPressed = {};
-  //         } else {
-  //           return "";
-  //         }
-  //         break;
-  //     }
-  //   }
-  // }, []);
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress);
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [handleKeyPress]);
-
   return (
     <>
       <Spin spinning={progress}>
@@ -190,7 +115,6 @@ const DepartmentsPage = ({ pageName }) => {
             onClear={() => setRecords([])}
             onGetAll={handleGetAll}
             onAdd={access?.CanAdd && handleAdd}
-            searchFocus={searchFocus}
           />
 
           <Col xs={24}>

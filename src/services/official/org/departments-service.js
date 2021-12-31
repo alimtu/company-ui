@@ -9,18 +9,14 @@ async function getAllData() {
   return data;
 }
 
-async function getMembersByDepartmentID(departmentID) {
-  const { data } = await http.get(`${apiEndpoint}/departmentMembers`, {
-    params: {
-      departmentID,
-    },
-  });
+async function getParams() {
+  const { data } = await http.get(`${apiEndpoint}/params`);
 
   return data;
 }
 
-async function getParams() {
-  const { data } = await http.get(`${apiEndpoint}/params`);
+async function getEmployees(departmentID) {
+  const { data } = await http.get(`${apiEndpoint}/employees/${departmentID}`);
 
   return data;
 }
@@ -46,10 +42,10 @@ export async function deleteData(recordID) {
 const service = {
   getAllData,
   getParams,
+  getEmployees,
   searchData,
   saveData,
   deleteData,
-  getMembersByDepartmentID,
 };
 
 export default service;

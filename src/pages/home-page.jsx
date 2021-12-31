@@ -5,14 +5,17 @@ import {
   Drawer,
   Row,
   Col,
-  Menu,
   Popover,
   Space,
   Button,
-  Avatar,
-  Divider,
 } from "antd";
-import { MenuOutlined as MenuIcon } from "@ant-design/icons";
+import {
+  MenuOutlined as MenuIcon,
+  UserOutlined as UserIcon,
+  CaretDownOutlined as DownIcon,
+  LeftOutlined as LeftIcon,
+} from "@ant-design/icons";
+import { AiOutlinePoweroff as LogoutIcon } from "react-icons/ai";
 import PageRoutes from "../routes/page-routes";
 import MenuRoutes from "../routes/menu-routes";
 import { useToggle } from "react-use";
@@ -20,49 +23,32 @@ import Words from "../resources/words";
 import Colors from "../resources/colors";
 import useWindowWidthBreakpoints from "use-window-width-breakpoints";
 import { isMobileView } from "../tools/general";
-import { useLocation, Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import BreadcrumbMap from "../components/common/breadcrumb-map";
 // import logo from "../assets/images/mazust-white.png";
-import { BiCaretDown, BiCaretLeft } from "react-icons/bi";
-import { HiOutlineUser } from "react-icons/hi";
-import MemberProfileImage from "../components/common/member-profile-image";
-import { usePageContext } from "../components/contexts/page-context";
-import { IoLogOutOutline } from "react-icons/io5";
+import authService from "../services/auth-service";
 
 const { Title, Text } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
 
-const MainHeader = ({ mobileView, trigger, history }) => {
-  const { picFileName, memberInfo } = usePageContext();
-  const { FirstName, LastName } = memberInfo;
+const PopoverContent = ({ history }) => {
+  return (
+    <Space className="logoutBtn">
+      <LogoutIcon style={{ fontSize: "20px", marginTop: "7px" }} />
 
-  const content = (
-    <Space direction="vertical" align="start">
-      <Space align="center" className="spaceAntd">
-        <MemberProfileImage fileName={picFileName} />
-        <Space align="start" direction="vertical">
-          <Text
-            style={{ fontWeight: "normal" }}
-          >{`${FirstName}  ${LastName}`}</Text>
-          <Text>
-            <Link style={{ display: "flex", alignItems: "center" }}>
-              {Words.see_profile} <BiCaretLeft />
-            </Link>
-          </Text>
-        </Space>
-      </Space>
-      <Divider style={{ margin: "0px" }} />
-      <Space align="center" className="spaceAntd">
-        <IoLogOutOutline style={{ fontSize: "20px", marginTop: "7px" }} />
-        <Text
-          style={{ fontWeight: "normal", cursor: "pointer" }}
-          onClick={() => history.push("/logout")}
-        >
-          {Words.logout_from_account}
-        </Text>
-      </Space>
+      <Text
+        level={5}
+        style={{ fontWeight: "normal", cursor: "pointer" }}
+        onClick={() => history.push("/logout")}
+      >
+        {Words.logout_from_account}
+      </Text>
     </Space>
   );
+};
+
+const MainHeader = ({ mobileView, trigger, history }) => {
+  const { FirstName, LastName } = authService.getCurrentUser();
 
   return (
     <Header
@@ -114,10 +100,32 @@ const MainHeader = ({ mobileView, trigger, history }) => {
         </Title>
       </div>
 
-      <Popover content={content} placement="bottomLeft">
-        <Button type="link" className="buttonAntd" style={{ color: "white" }}>
-          <HiOutlineUser style={{ fontSize: "25px", fontWeight: "normal" }} />
-          <BiCaretDown style={{ fontSize: "20px", fontWeight: "normal" }} />
+      <Popover
+        title={
+          <Space direction="vertical">
+            <Text style={{ fontSize: 13 }}>{`${FirstName}  ${LastName}`}</Text>
+
+            <Text style={{ fontSize: 13 }}>
+              <Link
+                to={`/home/profile`}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <Space>
+                  {Words.visit_profile}
+                  <LeftIcon style={{ fontSize: 10 }} />
+                </Space>
+              </Link>
+            </Text>
+          </Space>
+        }
+        content={<PopoverContent history={history} />}
+        placement="bottomLeft"
+      >
+        <Button type="link" className="userAccountBtn">
+          <Space style={{ color: Colors.white }}>
+            <UserIcon style={{ fontSize: 20 }} />
+            <DownIcon style={{ fontSize: 10 }} />
+          </Space>
         </Button>
       </Popover>
     </Header>

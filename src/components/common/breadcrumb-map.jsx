@@ -8,27 +8,33 @@ const BreadcrumbMap = ({ location }) => {
     "/home": Words.dashboard,
     "/home/official": Words.official,
     "/home/official/org": Words.orgAffairs,
-    "/home/official/timex": Words.timex,
     "/home/official/automation": Words.automation,
     "/home/settings": Words.settings,
     "/home/settings/basic-info": Words.basic_settings,
+    "/home/settings/timex": Words.timex_settings,
+    "/home/settings/accesses": Words.accesses,
   };
 
   const pathSnippets = location.pathname.split("/").filter((i) => i);
 
-  const breadcrumbItems = pathSnippets.map((_, index) => {
-    const url = `/${pathSnippets.slice(0, index + 1).join("/")}`;
+  const getBreadcrumbItems = () => {
+    let breadcrumbItems = [];
 
-    return (
-      <>
-        {breadcrumbNameMap[url] && (
+    pathSnippets.forEach((p, index) => {
+      const url = `/${pathSnippets.slice(0, index + 1).join("/")}`;
+
+      if (breadcrumbNameMap[url]) {
+        breadcrumbItems = [
+          ...breadcrumbItems,
           <Breadcrumb.Item key={`${index}_${url}`}>
             <Link to={url}>{breadcrumbNameMap[url]}</Link>
-          </Breadcrumb.Item>
-        )}
-      </>
-    );
-  });
+          </Breadcrumb.Item>,
+        ];
+      }
+    });
+
+    return breadcrumbItems;
+  };
 
   return (
     <Breadcrumb
@@ -39,7 +45,7 @@ const BreadcrumbMap = ({ location }) => {
         overflow: "initial",
       }}
     >
-      {breadcrumbItems}
+      {getBreadcrumbItems()}
     </Breadcrumb>
   );
 };

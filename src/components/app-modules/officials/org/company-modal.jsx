@@ -52,12 +52,14 @@ const schema = {
   FinancialCode: Joi.string()
     .min(10)
     .max(50)
+    .allow("")
     // .required()
     .regex(/^[0-9]+$/)
     .label(Words.financial_code),
   RegNo: Joi.string()
     .min(2)
     .max(50)
+    .allow("")
     // .required()
     .regex(/^[0-9]+$/)
     .label(Words.reg_no),
@@ -111,7 +113,7 @@ const CompanyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     record.Fax = "";
     record.Address = "";
     record.PostalCode = "";
-    record.NatioanlID = "";
+    record.NationalID = "";
     record.FinancialCode = "";
     record.RegNo = "";
 
@@ -135,8 +137,6 @@ const CompanyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     );
   });
 
-  const isEdit = selectedObject !== null;
-
   const handleSubmit = async () => {
     saveModalChanges(
       formConfig,
@@ -158,6 +158,8 @@ const CompanyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     return selectedCities;
   };
 
+  const isEdit = selectedObject !== null;
+
   return (
     <ModalWindow
       isOpen={isOpen}
@@ -170,12 +172,13 @@ const CompanyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
       width={650}
     >
       <Form ref={formRef} name="dataForm">
-        <Row gutter={[5, 1]}>
+        <Row gutter={[5, 1]} style={{ marginLeft: 1 }}>
           <Col xs={24}>
             <InputItem
               title={Words.title}
               fieldName="CompanyTitle"
               required
+              autoFocus
               maxLength={50}
               formConfig={formConfig}
             />
@@ -238,6 +241,7 @@ const CompanyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
               fieldName="Address"
               maxLength={200}
               multiline
+              showCount
               required
               formConfig={formConfig}
             />

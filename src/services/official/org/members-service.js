@@ -8,11 +8,6 @@ async function getAllData() {
 
   return data;
 }
-async function getPicFileName() {
-  const { data } = await http.get(`${apiEndpoint}/getPicFileName`);
-
-  return data;
-}
 
 async function getParams() {
   const { data } = await http.get(`${apiEndpoint}/params`);
@@ -34,6 +29,12 @@ export async function saveData(record) {
 
 export async function deleteData(recordID) {
   const { data } = await http.delete(`${apiEndpoint}/${recordID}`);
+
+  return data;
+}
+
+export async function getPicFileName() {
+  const { data } = await http.get(`${apiEndpoint}/getPicFileName`);
 
   return data;
 }

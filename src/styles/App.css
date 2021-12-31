@@ -211,9 +211,10 @@
   flex: 0 0 auto;
 }
 
-.spaceAntd:hover {
-  background-color: #e0f2eb;
+.logoutBtn:hover {
+  background-color: #d3eef9;
 }
-.buttonAntd:hover {
+
+.userAccountBtn:hover {
   background-color: #b27ad8;
 }

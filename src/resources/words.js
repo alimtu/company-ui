@@ -68,7 +68,7 @@ class Words extends Component {
   static to = "تا";
   static type = "نوع";
   static percent = "درصد";
-  static save_settings = "دخیره تنظیمات";
+  static save_settings = "ذخیره تنظیمات";
   static search_text = "متن جستجو";
   static clear = "پاکسازی";
   static view_all = "نمایش همه";
@@ -98,22 +98,6 @@ class Words extends Component {
   static limit_upload_file_size =
     "حجم فایل شما بیشتر از مقدار تعیین شده می باشد";
   static department_manager = "مدیر دپارتمان";
-
-  //-----------------
-  static manager = "مدیر";
-  static no_manager = "بدون مدیر";
-  static users = "اعضا";
-  static no_user = "بدون عضو";
-  static submit_crop = "ثبت تصویر برش داده شده";
-  static please_wait = "لطفا صبر کنید ...";
-  static please_wait_for_load_image = "لطفا تا بارگذاری تصویر شکیبا باشید ...";
-  static see_profile = "مشاهده حساب کاربری";
-  static logout_from_account = "خروج از حساب کاربری";
-  static new_image = "تصویر جدید";
-  static past_image = "تصویر قبلی";
-  static re_cut = "برش مجدد";
-
-  //------------------------------
   static descriptions = "توضیحات";
   static generate_random_account_info = "تولید نام کاربری و رمز عبور تصادفی";
   static color_code = "کد رنگ";
@@ -127,16 +111,36 @@ class Words extends Component {
   static invalid_national_code = "کدملی نامعتبر";
   static settings = "تنظیمات سامانه";
   static basic_settings = "اطلاعات پایه";
+  static nafar = "نفر";
+  static no_employee = "بدون کارمند!";
+  static no_department_manager = "بدون مدیر دپارتمان!";
+  static vacation_format = "قالب مرخصی";
+  static mission_format = "قالب ماموریت";
+  static by_day = "روزانه";
+  static by_hour = "ساعتی";
+  static submit_crop = "ثبت تصویر برش داده شده";
+  static new_image = "تصویر جدید";
+  static past_image = "تصویر قبلی";
+  static re_cut = "برش مجدد";
+  static please_wait = "لطفا صبر کنید ...";
+  static please_wait_for_load_image = "لطفا تا بارگذاری تصویر شکیبا باشید ...";
+  static visit_profile = "مشاهده حساب کاربری";
+  static logout_from_account = "خروج از حساب کاربری";
+  static date = "تاریخ";
+  static time = "زمان";
+  static holiday_date = "تاریخ تعطیلی";
+  static can_add = "امکان ثبت";
+  static can_edit = "امکان ویرایش";
+  static can_delete = "امکان حذف";
+  static can_view = "امکان مشاهده";
+  static back = "بازگشت";
+  static success_load_graph = "چارت سازمانی با موفقیت بارگذاری شد";
 
   static dashboard = "داشبورد";
   //----
   static official = "اداری";
   //----
   static orgAffairs = "ساختار سازمانی";
-  static provinces = "استان ها";
-  static province = "استان";
-  static cities = "شهرها";
-  static city = "شهر";
   static departments = "دپارتمان ها";
   static department = "دپارتمان";
   static roles = "سمت ها";
@@ -154,7 +158,30 @@ class Words extends Component {
   static duties = "شرح وظایف";
   static duty_level = "سطح وظیفه";
   //---
+  static provinces = "استان ها";
+  static province = "استان";
+  static cities = "شهرها";
+  static city = "شهر";
+  //---
+  static security_guards = "نگهبان ها";
+  static security_guard = "نگهبان";
+  //---
   static timex = "تایمکس";
+  static timex_settings = "تنظیمات تایمکس";
+  static security = "امنیت";
+  static indexes = "شاخص ها";
+  static vacations = "مرخصی ها";
+  static missions = "ماموریت ها";
+  static work_time_info = "اطلاعات تردد";
+  static reports = "گزارش ها";
+  //---
+  static vacation_types = "انواع مرخصی";
+  static mission_types = "انواع ماموریت";
+  static holidays = "تعطیلات";
+  //---
+  static page_accesses = "دسترسی صفحات";
+
+  //---
   static automation = "اتوماسیون اداری";
   //---
 
@@ -162,12 +189,32 @@ class Words extends Component {
     operation_failed: "امکان انجام عملیات وجود ندارد",
     success_submit: "ثبت اطلاعات با موفقیت انجام شد",
     no_national_code: "کدملی وارد نشده است",
+    page_not_found: "صفحه مورد درخواست شما یافت نشد",
+    invalid_access_page: "متاسفانه مجاز به دیدن این صفحه نمی باشید",
   };
 
   static questions = {
     sure_to_logout: "برای خروج از سامانه اطمینان دارید؟",
     sure_to_delete_item: "برای حرف رکورد انتخابی اطمینان دارید؟",
     sure_to_delete_image: "برای حذف تصویر اطمینان دارید؟",
+  };
+
+  static monthes = {
+    farvardin: "فروردین",
+    ordibehesht: "اردیبهشت",
+    khordad: "خرداد",
+    //---
+    tir: "تیر",
+    mordad: "مرداد",
+    shahrivar: "شهریور",
+    //---
+    mehr: "مهر",
+    aban: "آبان",
+    azar: "آذر",
+    //---
+    dey: "دی",
+    bahman: "بهمن",
+    esfand: "اسفند",
   };
 }
 

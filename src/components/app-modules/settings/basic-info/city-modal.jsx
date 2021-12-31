@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useMount } from "react-use";
 import { Form, Row, Col } from "antd";
 import Joi from "joi-browser";
@@ -99,7 +99,7 @@ const CityModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
       onCancel={onCancel}
     >
       <Form ref={formRef} name="dataForm">
-        <Row gutter={1}>
+        <Row gutter={[5, 1]} style={{ marginLeft: 1 }}>
           <Col xs={24}>
             <DropdownItem
               title={Words.province}
@@ -108,6 +108,7 @@ const CityModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
               valueColumn="ProvinceTitle"
               formConfig={formConfig}
               disabled={isEdit}
+              autoFocus
             />
           </Col>
           <Col xs={24}>

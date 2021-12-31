@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useMount } from "react-use";
 import service from "./../../../../services/official/org/departments-service";
 import { OrganizationGraph } from "@ant-design/charts";
@@ -7,13 +7,13 @@ import { fileBasicUrl } from "../../../../config.json";
 import utils from "../../../../tools/utils";
 import DepartmentMembersModal from "./department-members-modal";
 import Words from "../../../../resources/words";
-//---
 
 const OrgChartPage = () => {
   const [departments, setDepartments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [departmentID, setDepartmentID] = useState(0);
   const [departmentTitle, setDepartmentTitle] = useState("");
+  //............
 
   useMount(async () => {
     const data = await service.getAllData();
@@ -43,7 +43,12 @@ const OrgChartPage = () => {
   const getAntdNodes = (department, depList) => {
     let children = [];
 
-    let { DepartmentID, DepartmentTitle, Manager, EmployeesCount } = department;
+    const {
+      DepartmentID,
+      DepartmentTitle,
+      Manager,
+      EmployeesCount,
+    } = department;
 
     const subDepartments = depList.filter(
       (d) => d.ParentDepartmentID === DepartmentID
@@ -52,8 +57,6 @@ const OrgChartPage = () => {
     subDepartments.forEach((dep) => {
       children = [...children, getAntdNodes(dep, depList)];
     });
-
-    Manager = JSON.parse(Manager);
 
     return {
       id: `${DepartmentID}`,
@@ -104,7 +107,6 @@ const OrgChartPage = () => {
                     fontSize: 20,
                     fontWeight: "bolder",
                   },
-                  // Unique field within group
                   name: `text-${Math.random()}`,
                 });
 
@@ -115,7 +117,7 @@ const OrgChartPage = () => {
                     x: image ? startX + width / 2 - 30 : startX + width / 2,
                     y: startY + 50,
                     text:
-                      fullName?.length > 0
+                      fullName.length > 0
                         ? `${Words.department_manager} : ${fullName}`
                         : Words.no_department_manager,
                     fill: "black",
@@ -128,7 +130,6 @@ const OrgChartPage = () => {
                   font: {
                     size: 34,
                   },
-                  // Unique field within group
                   name: `text2-${Math.random()}`,
                 });
 
@@ -151,7 +152,6 @@ const OrgChartPage = () => {
                   alignItems: "center",
                   fontFamily: "Yekan",
                 },
-                // Unique field within group
                 name: `text3-${Math.random()}`,
               });
 
@@ -167,10 +167,10 @@ const OrgChartPage = () => {
                       ? `${fileBasicUrl}/${"member-profiles"}/${image}`
                       : "",
                   },
+
                   // Unique field within group
                   name: `text4-${Math.random()}`,
                 });
-
               return Math.max(
                 textShape1?.getBBox().height ?? 0,
                 textShape2?.getBBox().height ?? 0,
@@ -200,9 +200,10 @@ const OrgChartPage = () => {
               return 25;
             },
           }}
-          onReady={(graph) => {
+          onReady={async (graph) => {
             graph.on("node:click", (evt) => {
               const item = evt.item._cfg;
+
               handleShowModal(item.id, item.model.value.text);
             });
           }}

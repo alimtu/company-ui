@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMount } from "react-use";
-import { Button, Modal, Row, Col, Typography, Alert } from "antd";
+import { Button, Modal, Row, Col, Typography } from "antd";
 import Words from "../../../../resources/words";
 import Colors from "../../../../resources/colors";
 import utils from "../../../../tools/utils";
@@ -21,7 +21,7 @@ const columns = [
     render: (EmployeeID) => <Text>{utils.farsiNum(`${EmployeeID}`)}</Text>,
   },
   {
-    title: Words.profile_image,
+    title: "",
     width: 75,
     align: "center",
     dataIndex: "PicFileName",
@@ -72,9 +72,7 @@ const DepartmentMembersModal = ({
   const [members, setMembers] = useState([]);
 
   useMount(async () => {
-    const data = await departmentsService.getMembersByDepartmentID(
-      departmentID
-    );
+    const data = await departmentsService.getEmployees(departmentID);
 
     setMembers(data);
   });
@@ -100,9 +98,6 @@ const DepartmentMembersModal = ({
           style={{ maxHeight: "calc(100vh - 180px)" }}
         >
           <Row gutter={[10, 10]}>
-            {/* <Col xs={24}>
-              <Alert message={province.ProvinceTitle} type="info" showIcon />
-            </Col> */}
             <Col xs={24}>
               <DetailsTable records={members} columns={columns} />
             </Col>

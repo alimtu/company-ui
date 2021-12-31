@@ -20,7 +20,6 @@ const ModalContextProvider = ({ children }) => {
   const [companies, setCompanies] = useState([]);
   const [dutyLevels, setDutyLevels] = useState([]);
   const [fileList, setFileList] = useState({});
-  const [firstImage, setFirstImage] = useState({});
 
   const contextValue = {
     progress,
@@ -53,8 +52,6 @@ const ModalContextProvider = ({ children }) => {
     setDutyLevels,
     fileList,
     setFileList,
-    firstImage,
-    setFirstImage,
   };
 
   return (
@@ -65,20 +62,12 @@ const ModalContextProvider = ({ children }) => {
 };
 
 const useResetContext = () => {
-  const {
-    setProgress,
-    setRecord,
-    setErrors,
-    setFileList,
-    setFirstImage,
-  } = useModalContext();
+  const { setProgress, setRecord, setErrors } = useModalContext();
 
   const resetContext = () => {
     setProgress(false);
     setRecord({});
     setErrors({});
-    setFileList({});
-    setFirstImage({});
   };
 
   return resetContext;

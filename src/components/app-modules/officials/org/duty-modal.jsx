@@ -118,7 +118,7 @@ const DutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
       onCancel={onCancel}
     >
       <Form ref={formRef} name="dataForm">
-        <Row gutter={[5, 1]}>
+        <Row gutter={[5, 1]} style={{ marginLeft: 1 }}>
           {isEdit && (
             <Col xs={24}>
               <TextItem
@@ -138,6 +138,7 @@ const DutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
                 valueColumn="FullName"
                 formConfig={formConfig}
                 required
+                autoFocus
               />
             </Col>
           )}
@@ -149,6 +150,7 @@ const DutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
               valueColumn="LevelTitle"
               formConfig={formConfig}
               required
+              autoFocus={isEdit}
             />
           </Col>
           <Col xs={24}>
@@ -165,6 +167,7 @@ const DutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
               title={Words.descriptions}
               fieldName="DetailsText"
               multiline
+              showCount
               maxLength={1024}
               formConfig={formConfig}
             />

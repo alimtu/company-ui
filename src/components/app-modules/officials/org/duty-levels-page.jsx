@@ -1,6 +1,6 @@
 import React from "react";
 import { useMount } from "react-use";
-import { Spin, Row, Col, Typography, Space, Button, Tooltip } from "antd";
+import { Spin, Row, Col, Typography, Space, Button } from "antd";
 import { MdColorLens as ColorIcon } from "react-icons/md";
 import {
   AiFillCaretUp as UpIcon,
@@ -109,21 +109,17 @@ const DutyLevelsPage = ({ pageName }) => {
   const getOperationalButtons = (record) => {
     return (
       <Space>
-        <Tooltip title={Words.move_up}>
-          <Button
-            type="link"
-            icon={<UpIcon size={20} style={{ color: Colors.blue[6] }} />}
-            onClick={async () => await handleChangeOrder(record, "up")}
-          />
-        </Tooltip>
+        <Button
+          type="link"
+          icon={<UpIcon size={20} style={{ color: Colors.blue[6] }} />}
+          onClick={async () => await handleChangeOrder(record, "up")}
+        />
 
-        <Tooltip title={Words.move_down}>
-          <Button
-            type="link"
-            icon={<DownIcon size={20} style={{ color: Colors.red[6] }} />}
-            onClick={async () => await handleChangeOrder(record, "down")}
-          />
-        </Tooltip>
+        <Button
+          type="link"
+          icon={<DownIcon size={20} style={{ color: Colors.red[6] }} />}
+          onClick={async () => await handleChangeOrder(record, "down")}
+        />
       </Space>
     );
   };

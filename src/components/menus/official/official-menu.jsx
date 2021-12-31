@@ -8,9 +8,9 @@ import {
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useMount } from "react-use";
-import modulesService from "../../services/app/modules-service";
-import Colors from "./../../resources/colors";
-import Words from "./../../resources/words";
+import modulesService from "../../../services/app/modules-service";
+import Colors from "../../../resources/colors";
+import Words from "../../../resources/words";
 
 const iconSize = 20;
 

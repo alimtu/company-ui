@@ -88,12 +88,13 @@ const DutyLevelModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
       onCancel={onCancel}
     >
       <Form ref={formRef} name="dataForm">
-        <Row gutter={1}>
+        <Row gutter={[5, 1]} style={{ marginLeft: 1 }}>
           <Col xs={24}>
             <InputItem
               title={Words.title}
               fieldName="LevelTitle"
               required
+              autoFocus
               maxLength={50}
               formConfig={formConfig}
             />
