@@ -22,7 +22,7 @@ import MemberDetailsModal from "./member-details-modal";
 import Colors from "../../../../resources/colors";
 import MemberProfileImage from "../../../common/member-profile-image";
 import { usePageContext } from "./../../../contexts/page-context";
-import { PrintPage } from "./PrintPage";
+import { PrintPage } from "./print-page";
 
 const { Text } = Typography;
 

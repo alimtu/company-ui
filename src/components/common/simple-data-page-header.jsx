@@ -12,7 +12,7 @@ import { RiPrinterLine } from "react-icons/ri";
 import { isMobileView } from "../../tools/general";
 import useWindowWidthBreakpoints from "use-window-width-breakpoints";
 import { useReactToPrint } from "react-to-print";
-import { PrintPage } from "../app-modules/officials/org/PrintPage";
+import { PrintPage } from "../app-modules/officials/org/print-page";
 
 const { Text } = Typography;
 const { Search } = Input;
