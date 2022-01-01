@@ -1,18 +1,18 @@
-import React, { useEffect, useRef } from "react";
-import { Layout, Space, Typography, Col } from "antd";
+import React from "react";
+import { Layout, Space, Typography } from "antd";
 import Words from "../../../../resources/words";
 import logo from "./../../../../assets/images/logo.png";
 import utils from "../../../../tools/utils";
 import authService from "../../../../services/auth-service";
 import SimpleDataTable from "../../../common/simple-data-table";
-import { getSorter } from "../../../../tools/form-manager";
+// import { getSorter } from "../../../../tools/form-manager";
 import MemberProfileImage from "../../../common/member-profile-image";
 
 const { Header, Footer, Content } = Layout;
 const { Text, Title } = Typography;
 
 export const PrintPage = React.forwardRef((props, ref) => {
-  let { records, columns } = props;
+  let { records } = props;
 
   const memberInfo = authService.getCurrentUser();
 
@@ -73,36 +73,6 @@ export const PrintPage = React.forwardRef((props, ref) => {
       render: (CityTitle) => <Text>{utils.farsiNum(CityTitle)}</Text>,
     },
   ];
-
-  useEffect(() => {
-    columns.forEach((element) => {
-      delete element.width;
-    });
-    columns.pop();
-    columns.push(
-      {
-        title: Words.fix_tel,
-        align: "center",
-        ellipsis: true,
-        dataIndex: "FixTel",
-        render: (FixTel) => <Text>{utils.farsiNum(FixTel)}</Text>,
-      },
-      {
-        title: Words.province,
-        align: "center",
-        ellipsis: true,
-        dataIndex: "ProvinceTitle",
-        render: (ProvinceTitle) => <Text>{utils.farsiNum(ProvinceTitle)}</Text>,
-      },
-      {
-        title: Words.city,
-        align: "center",
-        ellipsis: true,
-        dataIndex: "CityTitle",
-        render: (CityTitle) => <Text>{utils.farsiNum(CityTitle)}</Text>,
-      }
-    );
-  }, []);
 
   return (
     <div ref={ref}>

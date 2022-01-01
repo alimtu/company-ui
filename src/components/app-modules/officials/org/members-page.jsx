@@ -235,7 +235,7 @@ const MembersPage = ({ pageName }) => {
         />
       )}
       <Col style={{ display: "none" }}>
-        <PrintPage ref={componentRef} records={records} columns={baseColumns} />
+        <PrintPage ref={componentRef} records={records} />
       </Col>
     </>
   );
