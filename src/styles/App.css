@@ -218,3 +218,50 @@
 .userAccountBtn:hover {
   background-color: #b27ad8;
 }
+
+/* //--------------------------------- */
+.page-footer {
+  position: fixed;
+  width: 100%;
+  border-top: 1px solid black;
+  z-index: 1000;
+  bottom: 0;
+  display: table-footer-group;
+}
+
+.page-header {
+  position: fixed;
+  width: 100%;
+  border-bottom: 1px solid black;
+  z-index: 1000;
+  top: 0;
+  display: table-footer-group;
+}
+
+.page-header,
+.page-header-space {
+  height: 100px;
+}
+
+.page-footer,
+.page-footer-space {
+  height: 50px;
+}
+
+@page {
+  size: landscape;
+  margin: 0 0 9mm 0;
+  float: none !important;
+}
+
+@media print {
+  thead {
+    display: table-header-group;
+  }
+  tfoot {
+    display: table-footer-group;
+  }
+  body {
+    margin: 0;
+  }
+}

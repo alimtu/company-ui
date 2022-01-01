@@ -94,6 +94,7 @@ const schema = {
 const initRecord = {
   MemberID: 0,
   CityID: 0,
+  ProvinceID: 0,
   GenderID: 0,
   FirstName: "",
   LastName: "",
@@ -181,8 +182,14 @@ const handleSubmitWithFile = async (
   onOk,
   clearRecord
 ) => {
-  const { errors, record, fileList, setFileList, setProgress, schema } =
-    formConfig;
+  const {
+    errors,
+    record,
+    fileList,
+    setFileList,
+    setProgress,
+    schema,
+  } = formConfig;
 
   if (!hasFormError(errors)) {
     setProgress(true);

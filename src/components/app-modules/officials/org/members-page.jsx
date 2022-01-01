@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useMount } from "react-use";
 import { Spin, Row, Col, Typography, Button } from "antd";
 import { InfoCircleOutlined as InfoIcon } from "@ant-design/icons";
@@ -22,6 +22,7 @@ import MemberDetailsModal from "./member-details-modal";
 import Colors from "../../../../resources/colors";
 import MemberProfileImage from "../../../common/member-profile-image";
 import { usePageContext } from "./../../../contexts/page-context";
+import { PrintPage } from "./PrintPage";
 
 const { Text } = Typography;
 
@@ -127,6 +128,8 @@ const baseColumns = [
 const recordID = "MemberID";
 
 const MembersPage = ({ pageName }) => {
+  const componentRef = useRef();
+
   const {
     progress,
     searched,
@@ -201,6 +204,7 @@ const MembersPage = ({ pageName }) => {
             onClear={() => setRecords([])}
             onGetAll={handleGetAll}
             onAdd={access?.CanAdd && handleAdd}
+            componentRef={componentRef}
           />
 
           <Col xs={24}>
@@ -230,6 +234,9 @@ const MembersPage = ({ pageName }) => {
           member={selectedObject}
         />
       )}
+      <Col style={{ display: "none" }}>
+        <PrintPage ref={componentRef} records={records} columns={baseColumns} />
+      </Col>
     </>
   );
 };

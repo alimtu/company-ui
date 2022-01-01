@@ -135,6 +135,10 @@ class Words extends Component {
   static can_view = "امکان مشاهده";
   static back = "بازگشت";
   static success_load_graph = "چارت سازمانی با موفقیت بارگذاری شد";
+  //----
+  static print = "پرینت";
+  static current_user = "کاربر جاری";
+  static fulad_bahman = "گروه صنعتی فولاد بهمن";
 
   static dashboard = "داشبورد";
   //----
