@@ -51,6 +51,7 @@ const FileItem = ({
   labelCol,
   formConfig,
   fileConfig,
+  setFirstImage,
 }) => {
   const { errors, fileList } = formConfig;
   const { maxFileSize, sizeType } = fileConfig;
@@ -95,7 +96,10 @@ const FileItem = ({
       )}
     >
       <>
-        <Upload {...props}>
+        <Upload
+          {...props}
+          onChange={setFirstImage ? () => setFirstImage({}) : null}
+        >
           <Button icon={<UploadIcon />}>{Words.select_file}</Button>
         </Upload>
 
