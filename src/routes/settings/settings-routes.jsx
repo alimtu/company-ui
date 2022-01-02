@@ -3,9 +3,10 @@ import { Switch, Redirect } from "react-router-dom";
 import ProtectedRoute from "../../components/common/protected-route";
 import SettingsDashboard from "../../components/app-modules/settings/settings-dashboard";
 //---
-import SettingsBasicInfoRoutes from "./settings-basic-info-routes";
-import SettingsTimexRoutes from "./settings-timex-routes";
-import SettingsAccessesRoutes from "./settings-accesses-routes";
+import AccessesRoutes from "./accesses-routes";
+import BasicInfoRoutes from "./basic-info-routes";
+import OrgRoutes from "./org-routes";
+import TimexRoutes from "./timex-routes";
 //---
 
 const SettingsRoute = ({ path }) => {
@@ -17,16 +18,20 @@ const SettingsRoute = ({ path }) => {
         component={SettingsDashboard}
       />
       <ProtectedRoute
+        path={`${path}/settings/accesses`}
+        render={() => <AccessesRoutes path={path} />}
+      />
+      <ProtectedRoute
         path={`${path}/settings/basic-info`}
-        render={() => <SettingsBasicInfoRoutes path={path} />}
+        render={() => <BasicInfoRoutes path={path} />}
+      />
+      <ProtectedRoute
+        path={`${path}/settings/org`}
+        render={() => <OrgRoutes path={path} />}
       />
       <ProtectedRoute
         path={`${path}/settings/timex`}
-        render={() => <SettingsTimexRoutes path={path} />}
-      />
-      <ProtectedRoute
-        path={`${path}/settings/accesses`}
-        render={() => <SettingsAccessesRoutes path={path} />}
+        render={() => <TimexRoutes path={path} />}
       />
       <Redirect to="/not-found" />
     </Switch>

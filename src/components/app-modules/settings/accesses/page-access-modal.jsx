@@ -18,11 +18,11 @@ import Words from "../../../../resources/words";
 import Colors from "../../../../resources/colors";
 import utils from "../../../../tools/utils";
 import MemberProfileImage from "../../../common/member-profile-image";
-import service from "./../../../../services/settings/accesses/page-accesses-service";
+import service from "../../../../services/settings/accesses/page-accesses-service";
 import {
   useModalContext,
   useResetContext,
-} from "./../../../contexts/modal-context";
+} from "../../../contexts/modal-context";
 import { handleError } from "../../../../tools/form-manager";
 
 const { Text } = Typography;

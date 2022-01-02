@@ -1,12 +1,15 @@
 import React from "react";
 import { useMount } from "react-use";
-import { Spin, Row, Col, Typography, Button, Tooltip } from "antd";
-import { BsKeyFill as KeyIcon } from "react-icons/bs";
+import { Spin, Row, Col, Typography, Button } from "antd";
+import { InfoCircleOutlined as InfoIcon } from "@ant-design/icons";
 import Words from "../../../../resources/words";
 import Colors from "../../../../resources/colors";
 import utils from "./../../../../tools/utils";
-import service from "./../../../../services/settings/org/employees-service";
-import { AiOutlineCheck as CheckIcon } from "react-icons/ai";
+import service from "./../../../../services/settings/timex/security-guards-service";
+import {
+  AiFillLock as LockIcon,
+  AiOutlineCheck as CheckIcon,
+} from "react-icons/ai";
 import {
   getSorter,
   checkAccess,
@@ -15,20 +18,40 @@ import {
 } from "../../../../tools/form-manager";
 import SimpleDataTable from "../../../common/simple-data-table";
 import SimpleDataPageHeader from "../../../common/simple-data-page-header";
-import PageAccessModal from "./page-access-modal";
+import SecurityGuardModal from "./security-guard-modal";
+import SecurityGuardDetailsModal from "./security-guard-details-modal";
 import MemberProfileImage from "../../../common/member-profile-image";
 import { usePageContext } from "./../../../contexts/page-context";
 
 const { Text } = Typography;
+
+const getSheets = (records) => [
+  {
+    title: "Employees",
+    data: records,
+    columns: [
+      { label: Words.id, value: "GuardID" },
+      { label: Words.member_id, value: "MemberID" },
+      { label: Words.first_name, value: "FirstName" },
+      { label: Words.last_name, value: "LastName" },
+      { label: Words.national_code, value: "NationalCode" },
+      { label: Words.mobile, value: "Mobile" },
+      {
+        label: Words.status,
+        value: (record) => (record.IsActive ? Words.active : Words.inactive),
+      },
+    ],
+  },
+];
 
 const baseColumns = [
   {
     title: Words.id,
     width: 100,
     align: "center",
-    dataIndex: "EmployeeID",
-    sorter: getSorter("EmployeeID"),
-    render: (EmployeeID) => <Text>{utils.farsiNum(`${EmployeeID}`)}</Text>,
+    dataIndex: "GuardID",
+    sorter: getSorter("GuardID"),
+    render: (GuardID) => <Text>{utils.farsiNum(`${GuardID}`)}</Text>,
   },
   {
     title: "",
@@ -50,43 +73,23 @@ const baseColumns = [
     ),
   },
   {
-    title: Words.department,
-    width: 150,
+    title: Words.status,
+    width: 75,
     align: "center",
     ellipsis: true,
-    dataIndex: "DepartmentTitle",
-    sorter: getSorter("DepartmentTitle"),
-    render: (DepartmentTitle) => (
-      <Text style={{ color: Colors.orange[6] }}>{DepartmentTitle}</Text>
-    ),
-  },
-  {
-    title: Words.role,
-    width: 200,
-    align: "center",
-    ellipsis: true,
-    dataIndex: "RoleTitle",
-    sorter: getSorter("RoleTitle"),
-    render: (RoleTitle) => (
-      <Text style={{ color: Colors.magenta[6] }}>{RoleTitle}</Text>
-    ),
-  },
-  {
-    title: Words.department_manager,
-    width: 120,
-    align: "center",
-    ellipsis: true,
-    sorter: getSorter("IsDepartmentManager"),
+    sorter: getSorter("IsActive"),
     render: (record) =>
-      record.IsDepartmentManager && (
+      record.IsActive ? (
         <CheckIcon style={{ color: Colors.green[6] }} />
+      ) : (
+        <LockIcon style={{ color: Colors.red[6] }} />
       ),
   },
 ];
 
-const recordID = "EmployeeID";
+const recordID = "GuardID";
 
-const PageAccessesPage = ({ pageName }) => {
+const SecurityGuardsPage = ({ pageName }) => {
   const {
     progress,
     searched,
@@ -98,6 +101,7 @@ const PageAccessesPage = ({ pageName }) => {
     setAccess,
     selectedObject,
     setSelectedObject,
+    showModal,
     showDetails,
     setShowDetails,
   } = usePageContext();
@@ -107,24 +111,30 @@ const PageAccessesPage = ({ pageName }) => {
     await checkAccess(setAccess, pageName);
   });
 
-  const { handleGetAll, handleSearch, handleResetContext } =
-    GetSimplaDataPageMethods({
-      service,
-      recordID,
-    });
+  const {
+    handleCloseModal,
+    handleGetAll,
+    handleSearch,
+    handleAdd,
+    handleEdit,
+    handleDelete,
+    handleSave,
+    handleResetContext,
+  } = GetSimplaDataPageMethods({
+    service,
+    recordID,
+  });
 
   const getOperationalButtons = (record) => {
     return (
-      <Tooltip title={Words.accesses}>
-        <Button
-          type="link"
-          icon={<KeyIcon style={{ color: Colors.red[6], fontSize: 20 }} />}
-          onClick={() => {
-            setSelectedObject(record);
-            setShowDetails(true);
-          }}
-        />
-      </Tooltip>
+      <Button
+        type="link"
+        icon={<InfoIcon style={{ color: Colors.green[6] }} />}
+        onClick={() => {
+          setSelectedObject(record);
+          setShowDetails(true);
+        }}
+      />
     );
   };
 
@@ -133,8 +143,8 @@ const PageAccessesPage = ({ pageName }) => {
         baseColumns,
         getOperationalButtons,
         access,
-        null, //handleEdit,
-        null //handleDelete
+        handleEdit,
+        handleDelete
       )
     : [];
 
@@ -145,15 +155,15 @@ const PageAccessesPage = ({ pageName }) => {
       <Spin spinning={progress}>
         <Row gutter={[10, 15]}>
           <SimpleDataPageHeader
-            title={Words.page_accesses}
+            title={Words.security_guards}
             searchText={searchText}
-            sheets={null}
-            fileName="PageAccesses"
+            sheets={getSheets(records)}
+            fileName="SecurityGuards"
             onSearchTextChanged={(e) => setSearchText(e.target.value)}
             onSearch={handleSearch}
             onClear={() => setRecords([])}
             onGetAll={handleGetAll}
-            onAdd={null}
+            onAdd={access?.CanAdd && handleAdd}
           />
 
           <Col xs={24}>
@@ -164,18 +174,27 @@ const PageAccessesPage = ({ pageName }) => {
         </Row>
       </Spin>
 
+      {showModal && (
+        <SecurityGuardModal
+          onOk={handleSave}
+          onCancel={handleCloseModal}
+          isOpen={showModal}
+          selectedObject={selectedObject}
+        />
+      )}
+
       {showDetails && (
-        <PageAccessModal
+        <SecurityGuardDetailsModal
           onOk={() => {
             setShowDetails(false);
             setSelectedObject(null);
           }}
           isOpen={showDetails}
-          employee={selectedObject}
+          securityGuard={selectedObject}
         />
       )}
     </>
   );
 };
 
-export default PageAccessesPage;
+export default SecurityGuardsPage;

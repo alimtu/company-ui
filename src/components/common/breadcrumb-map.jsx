@@ -6,13 +6,11 @@ import Words from "../../resources/words";
 const BreadcrumbMap = ({ location }) => {
   const breadcrumbNameMap = {
     "/home": Words.dashboard,
-    "/home/official": Words.official,
-    "/home/official/org": Words.orgAffairs,
-    "/home/official/automation": Words.automation,
     "/home/settings": Words.settings,
-    "/home/settings/basic-info": Words.basic_settings,
-    "/home/settings/timex": Words.timex_settings,
     "/home/settings/accesses": Words.accesses,
+    "/home/settings/basic-info": Words.basic_settings,
+    "/home/settings/org": Words.org_structure,
+    "/home/settings/timex": Words.timex_settings,
   };
 
   const pathSnippets = location.pathname.split("/").filter((i) => i);

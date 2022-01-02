@@ -134,17 +134,12 @@ class Words extends Component {
   static can_delete = "امکان حذف";
   static can_view = "امکان مشاهده";
   static back = "بازگشت";
-  static success_load_graph = "چارت سازمانی با موفقیت بارگذاری شد";
-  //----
-  static print = "پرینت";
-  static current_user = "کاربر جاری";
-  static fulad_bahman = "گروه صنعتی فولاد بهمن";
 
   static dashboard = "داشبورد";
   //----
   static official = "اداری";
   //----
-  static orgAffairs = "ساختار سازمانی";
+  static org_structure = "ساختار سازمانی";
   static departments = "دپارتمان ها";
   static department = "دپارتمان";
   static roles = "سمت ها";
@@ -160,6 +155,8 @@ class Words extends Component {
   static comp_agents = "رابطین شرکت";
   static duty_levels = "سطوح وظایف";
   static duties = "شرح وظایف";
+  static personal_duties = "شرح وظایف فردی";
+  static role_duties = "شرح وظایف سمت";
   static duty_level = "سطح وظیفه";
   //---
   static provinces = "استان ها";

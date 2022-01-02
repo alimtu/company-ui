@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Col, Typography, Input, Space, Tooltip, Button } from "antd";
 import {
   ReloadOutlined as ReloadIcon,
@@ -8,11 +8,6 @@ import {
 } from "@ant-design/icons";
 import ExportExcel from "../common/export-excel";
 import Words from "../../resources/words";
-import { RiPrinterLine } from "react-icons/ri";
-import { isMobileView } from "../../tools/general";
-import useWindowWidthBreakpoints from "use-window-width-breakpoints";
-import { useReactToPrint } from "react-to-print";
-import { PrintPage } from "../app-modules/officials/org/print-page";
 
 const { Text } = Typography;
 const { Search } = Input;
@@ -27,22 +22,7 @@ const SimpleDataPageHeader = ({
   onClear,
   onGetAll,
   onAdd,
-  searchFocus,
-  componentRef,
 }) => {
-  const inputRef = useRef(null);
-  const mobileView = isMobileView(useWindowWidthBreakpoints);
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
-  if (searchFocus) {
-    inputRef.current?.focus();
-  } else {
-    inputRef.current?.blur();
-  }
-
   return (
     <>
       <Col xs={24}>
@@ -67,7 +47,6 @@ const SimpleDataPageHeader = ({
           value={searchText}
           enterButton
           allowClear
-          ref={inputRef}
         />
       </Col>
 
@@ -94,34 +73,27 @@ const SimpleDataPageHeader = ({
       </Col>
 
       <Col xs={12} md={4} lg={4} className="rowFlex flexEnd">
-        <Space>
-          <ExportExcel
-            sheets={sheets}
-            fileName={fileName}
-            button={
-              <Button type="primary" icon={<DownloadIcon />}>
-                {Words.excel}
+        {(sheets || onAdd) && (
+          <Space>
+            {sheets && (
+              <ExportExcel
+                sheets={sheets}
+                fileName={fileName}
+                button={
+                  <Button type="primary" icon={<DownloadIcon />}>
+                    {Words.excel}
+                  </Button>
+                }
+              />
+            )}
+
+            {onAdd && (
+              <Button type="primary" icon={<PlusIcon />} onClick={onAdd}>
+                {Words.new}
               </Button>
-            }
-          />
-
-          {componentRef && (
-            <Button
-              type="primary"
-              style={{ display: "flex", alignItems: "center" }}
-              onClick={handlePrint}
-            >
-              <RiPrinterLine fontSize="20px" style={{ marginLeft: "5px" }} />
-              {!mobileView && Words.print}
-            </Button>
-          )}
-
-          {onAdd && (
-            <Button type="primary" icon={<PlusIcon />} onClick={onAdd}>
-              {Words.new}
-            </Button>
-          )}
-        </Space>
+            )}
+          </Space>
+        )}
       </Col>
     </>
   );

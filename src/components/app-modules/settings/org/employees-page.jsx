@@ -1,11 +1,11 @@
 import React from "react";
 import { useMount } from "react-use";
-import { Spin, Row, Col, Typography, Button, Tooltip } from "antd";
-import { BsKeyFill as KeyIcon } from "react-icons/bs";
+import { Spin, Row, Col, Typography, Button } from "antd";
+import { InfoCircleOutlined as InfoIcon } from "@ant-design/icons";
 import Words from "../../../../resources/words";
 import Colors from "../../../../resources/colors";
-import utils from "./../../../../tools/utils";
-import service from "./../../../../services/settings/org/employees-service";
+import utils from "../../../../tools/utils";
+import service from "../../../../services/settings/org/employees-service";
 import { AiOutlineCheck as CheckIcon } from "react-icons/ai";
 import {
   getSorter,
@@ -15,11 +15,33 @@ import {
 } from "../../../../tools/form-manager";
 import SimpleDataTable from "../../../common/simple-data-table";
 import SimpleDataPageHeader from "../../../common/simple-data-page-header";
-import PageAccessModal from "./page-access-modal";
+import EmployeeModal from "./employee-modal";
+import EmployeeDetailsModal from "./employee-details-modal";
 import MemberProfileImage from "../../../common/member-profile-image";
-import { usePageContext } from "./../../../contexts/page-context";
+import { usePageContext } from "../../../contexts/page-context";
 
 const { Text } = Typography;
+
+const getSheets = (records) => [
+  {
+    title: "Employees",
+    data: records,
+    columns: [
+      { label: Words.id, value: "EmployeeID" },
+      { label: Words.member_id, value: "MemberID" },
+      { label: Words.first_name, value: "FirstName" },
+      { label: Words.last_name, value: "LastName" },
+      { label: Words.national_code, value: "NationalCode" },
+      { label: Words.mobile, value: "Mobile" },
+      { label: Words.department, value: "DepartmentTitle" },
+      { label: Words.role, value: "RoleTitle" },
+      {
+        label: Words.department_manager,
+        value: (record) => (record.IsDepartmentManger ? Words.yes : Words.no),
+      },
+    ],
+  },
+];
 
 const baseColumns = [
   {
@@ -86,7 +108,7 @@ const baseColumns = [
 
 const recordID = "EmployeeID";
 
-const PageAccessesPage = ({ pageName }) => {
+const EmployeesPage = ({ pageName }) => {
   const {
     progress,
     searched,
@@ -98,6 +120,7 @@ const PageAccessesPage = ({ pageName }) => {
     setAccess,
     selectedObject,
     setSelectedObject,
+    showModal,
     showDetails,
     setShowDetails,
   } = usePageContext();
@@ -107,24 +130,30 @@ const PageAccessesPage = ({ pageName }) => {
     await checkAccess(setAccess, pageName);
   });
 
-  const { handleGetAll, handleSearch, handleResetContext } =
-    GetSimplaDataPageMethods({
-      service,
-      recordID,
-    });
+  const {
+    handleCloseModal,
+    handleGetAll,
+    handleSearch,
+    handleAdd,
+    handleEdit,
+    handleDelete,
+    handleSave,
+    handleResetContext,
+  } = GetSimplaDataPageMethods({
+    service,
+    recordID,
+  });
 
   const getOperationalButtons = (record) => {
     return (
-      <Tooltip title={Words.accesses}>
-        <Button
-          type="link"
-          icon={<KeyIcon style={{ color: Colors.red[6], fontSize: 20 }} />}
-          onClick={() => {
-            setSelectedObject(record);
-            setShowDetails(true);
-          }}
-        />
-      </Tooltip>
+      <Button
+        type="link"
+        icon={<InfoIcon style={{ color: Colors.green[6] }} />}
+        onClick={() => {
+          setSelectedObject(record);
+          setShowDetails(true);
+        }}
+      />
     );
   };
 
@@ -133,8 +162,8 @@ const PageAccessesPage = ({ pageName }) => {
         baseColumns,
         getOperationalButtons,
         access,
-        null, //handleEdit,
-        null //handleDelete
+        handleEdit,
+        handleDelete
       )
     : [];
 
@@ -145,15 +174,15 @@ const PageAccessesPage = ({ pageName }) => {
       <Spin spinning={progress}>
         <Row gutter={[10, 15]}>
           <SimpleDataPageHeader
-            title={Words.page_accesses}
+            title={Words.employees}
             searchText={searchText}
-            sheets={null}
-            fileName="PageAccesses"
+            sheets={getSheets(records)}
+            fileName="Employees"
             onSearchTextChanged={(e) => setSearchText(e.target.value)}
             onSearch={handleSearch}
             onClear={() => setRecords([])}
             onGetAll={handleGetAll}
-            onAdd={null}
+            onAdd={access?.CanAdd && handleAdd}
           />
 
           <Col xs={24}>
@@ -164,8 +193,17 @@ const PageAccessesPage = ({ pageName }) => {
         </Row>
       </Spin>
 
+      {showModal && (
+        <EmployeeModal
+          onOk={handleSave}
+          onCancel={handleCloseModal}
+          isOpen={showModal}
+          selectedObject={selectedObject}
+        />
+      )}
+
       {showDetails && (
-        <PageAccessModal
+        <EmployeeDetailsModal
           onOk={() => {
             setShowDetails(false);
             setSelectedObject(null);
@@ -178,4 +216,4 @@ const PageAccessesPage = ({ pageName }) => {
   );
 };
 
-export default PageAccessesPage;
+export default EmployeesPage;

@@ -140,9 +140,8 @@ export const updateSavedRecords = (row, recordID, records, savedRow) => {
   if (row[recordID] === 0) {
     newRecords = [...records, savedRow];
   } else {
-    records[
-      records.findIndex((obj) => obj[recordID] === row[recordID])
-    ] = savedRow;
+    records[records.findIndex((obj) => obj[recordID] === row[recordID])] =
+      savedRow;
     newRecords = records;
   }
 
@@ -320,13 +319,7 @@ export const GetSimplaDataPageMethods = (config) => {
 
       try {
         // await new Promise((resolve) => setTimeout(resolve, 4000));
-        let result = await service.deleteData(row[recordID]);
-
-        if (result.Message) {
-          message.success(result.Message);
-        } else {
-          message.error(result.Error);
-        }
+        await service.deleteData(row[recordID]);
 
         let filteredRecords = records.filter(
           (obj) => obj[recordID] !== row[recordID]

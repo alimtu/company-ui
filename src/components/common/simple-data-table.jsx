@@ -3,18 +3,17 @@ import { Table, Alert } from "antd";
 import Words from "../../resources/words";
 import { getData } from "../../tools/form-manager";
 
-const SimpleDataTable = ({ records, columns, paginationOff }) => {
+const SimpleDataTable = ({ records, columns }) => {
   return (
     <>
       {records.length > 0 ? (
         <Table
           columns={columns}
           dataSource={getData(records)}
-          bordered
           scroll={{
-            scrollToFirstRowOnChange: paginationOff ? false : true,
-            x: paginationOff ? null : "100%",
-            y: paginationOff ? null : 300,
+            scrollToFirstRowOnChange: true,
+            x: "100%",
+            y: 300,
           }}
           showSorterTooltip={false}
           locale={{
@@ -22,7 +21,6 @@ const SimpleDataTable = ({ records, columns, paginationOff }) => {
             filterReset: Words.clear,
             emptyText: Words.emptyData,
           }}
-          pagination={paginationOff ? false : true}
           size="small"
         />
       ) : (

@@ -4,13 +4,10 @@ import ProtectedRoute from "../components/common/protected-route";
 import MainMenu from "../components/menus/main-menu";
 //---
 import SettingsMenu from "../components/menus/settings/settings-menu";
+import AccessesMenu from "../components/menus/settings/accesses-menu";
 import BasicInfoMenu from "../components/menus/settings/basic-info-menu";
-import SettingsTimexMenu from "../components/menus/settings/settings-timex-menu";
-//---
-import SettingsAccessesMenu from "../components/menus/settings/settings-accesses-menu";
-//---
-import OfficialMenu from "../components/menus/official/official-menu";
-import OrgMenu from "../components/menus/official/org-menu";
+import OrgMenu from "../components/menus/settings/org-menu";
+import TimexMenu from "../components/menus/settings/timex-menu";
 //---
 
 const MenuRoutes = ({ path }) => {
@@ -22,23 +19,16 @@ const MenuRoutes = ({ path }) => {
         component={SettingsMenu}
       />
       <ProtectedRoute
+        path={`${path}/settings/accesses`}
+        component={AccessesMenu}
+      />
+      <ProtectedRoute
         path={`${path}/settings/basic-info`}
         component={BasicInfoMenu}
       />
-      <ProtectedRoute
-        path={`${path}/settings/timex`}
-        component={SettingsTimexMenu}
-      />
-      <ProtectedRoute
-        path={`${path}/settings/accesses`}
-        component={SettingsAccessesMenu}
-      />
-      <ProtectedRoute
-        path={`${path}/official`}
-        exact
-        component={OfficialMenu}
-      />
-      <ProtectedRoute path={`${path}/official/org`} component={OrgMenu} />
+      <ProtectedRoute path={`${path}/settings/org`} component={OrgMenu} />
+      <ProtectedRoute path={`${path}/settings/timex`} component={TimexMenu} />
+
       <ProtectedRoute path={`${path}/`} exact component={MainMenu} />
     </Switch>
   );

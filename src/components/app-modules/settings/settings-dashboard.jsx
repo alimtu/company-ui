@@ -3,7 +3,10 @@ import { useMount } from "react-use";
 import { Row, Col } from "antd";
 import DashboardTile from "./../../common/dashboard-tile";
 import { GoSettings as BasicSettingsIcon } from "react-icons/go";
-import { AiOutlineFieldTime as TimexSettingsIcon } from "react-icons/ai";
+import {
+  AiOutlineFieldTime as TimexSettingsIcon,
+  AiFillBank as OrgIcon,
+} from "react-icons/ai";
 import { SiKeycdn as KeyIcon } from "react-icons/si";
 import Colors from "./../../../resources/colors";
 import modulesService from "./../../../services/app/modules-service";
@@ -20,21 +23,27 @@ const mapper = (moduleID) => {
 
   switch (moduleID) {
     case 1:
+      link = "accesses";
+      icon = <KeyIcon {...iconProps} />;
+      backColor = Colors.red[3];
+      break;
+
+    case 2:
       link = "basic-info";
       icon = <BasicSettingsIcon {...iconProps} />;
       backColor = Colors.blue[3];
       break;
 
-    case 5:
+    case 3:
+      link = "org";
+      icon = <OrgIcon {...iconProps} />;
+      backColor = Colors.green[3];
+      break;
+
+    case 4:
       link = "timex";
       icon = <TimexSettingsIcon {...iconProps} />;
       backColor = Colors.orange[3];
-      break;
-
-    case 6:
-      link = "accesses";
-      icon = <KeyIcon {...iconProps} />;
-      backColor = Colors.red[3];
       break;
 
     default:

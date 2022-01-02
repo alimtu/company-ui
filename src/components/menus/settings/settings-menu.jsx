@@ -3,6 +3,7 @@ import { Menu } from "antd";
 import {
   AiOutlineDashboard as DashboardIcon,
   AiOutlineFieldTime as TimexSettingsIcon,
+  AiFillBank as OrgIcon,
 } from "react-icons/ai";
 import { GoSettings as BasicSettingsIcon } from "react-icons/go";
 import { SiKeycdn as KeyIcon } from "react-icons/si";
@@ -20,13 +21,23 @@ const mapper = (moduleID) => {
 
   switch (moduleID) {
     case 1:
+      link = "accesses";
+      icon = <KeyIcon style={{ color: Colors.red[6] }} size={iconSize} />;
+      break;
+
+    case 2:
       link = "basic-info";
       icon = (
         <BasicSettingsIcon style={{ color: Colors.blue[6] }} size={iconSize} />
       );
       break;
 
-    case 5:
+    case 3:
+      link = "org";
+      icon = <OrgIcon style={{ color: Colors.green[6] }} size={iconSize} />;
+      break;
+
+    case 4:
       link = "timex";
       icon = (
         <TimexSettingsIcon
@@ -34,11 +45,6 @@ const mapper = (moduleID) => {
           size={iconSize}
         />
       );
-      break;
-
-    case 6:
-      link = "accesses";
-      icon = <KeyIcon style={{ color: Colors.red[6] }} size={iconSize} />;
       break;
 
     default:
