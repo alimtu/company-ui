@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useMount } from "react-use";
 import { Form, Row, Col } from "antd";
 import Joi from "joi-browser";
@@ -40,8 +40,14 @@ const formRef = React.createRef();
 const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
   const [parentDepartments, setParentDepartments] = useState([]);
 
-  const { progress, setProgress, record, setRecord, errors, setErrors } =
-    useModalContext();
+  const {
+    progress,
+    setProgress,
+    record,
+    setRecord,
+    errors,
+    setErrors,
+  } = useModalContext();
 
   const resetContext = useResetContext();
 
@@ -82,6 +88,31 @@ const DepartmentModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
       clearRecord
     );
   };
+
+  const handleKeyPress = useCallback(
+    (event) => {
+      switch (event.key) {
+        case "Shift":
+          clearRecord();
+          break;
+        case "F10":
+          if (!(validateForm({ record, schema }) && true)) {
+            handleSubmit();
+          } else {
+            return "";
+          }
+          break;
+      }
+    },
+    [record, schema]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   const isEdit = selectedObject !== null;
 
