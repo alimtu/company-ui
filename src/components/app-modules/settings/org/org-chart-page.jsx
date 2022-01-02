@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useMount } from "react-use";
 import service from "../../../../services/settings/org/departments-service";
 import { OrganizationGraph } from "@ant-design/charts";
@@ -7,13 +7,18 @@ import { fileBasicUrl } from "../../../../config.json";
 import utils from "../../../../tools/utils";
 import DepartmentMembersModal from "./department-members-modal";
 import Words from "../../../../resources/words";
-//---
+import { Button, Space, message } from "antd";
+import { FcFlowChart, FcParallelTasks } from "react-icons/fc";
 
 const OrgChartPage = () => {
   const [departments, setDepartments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [departmentID, setDepartmentID] = useState(0);
   const [departmentTitle, setDepartmentTitle] = useState("");
+  //............
+  const [typeChart, setTypeChart] = useState("TB");
+
+  const inputRef = useRef(null);
 
   useMount(async () => {
     const data = await service.getAllData();
@@ -21,10 +26,12 @@ const OrgChartPage = () => {
     setDepartments(data);
   });
 
-  const handleShowModal = (departmentID, departmentTitle) => {
-    setDepartmentTitle(departmentTitle);
-    setDepartmentID(departmentID);
-    setShowModal(true);
+  const handleShowModal = (departmentID, departmentTitle, shape) => {
+    if (shape !== "marker") {
+      setDepartmentTitle(departmentTitle);
+      setDepartmentID(departmentID);
+      setShowModal(true);
+    }
   };
 
   const getNodes = (departments) => {
@@ -43,8 +50,12 @@ const OrgChartPage = () => {
   const getAntdNodes = (department, depList) => {
     let children = [];
 
-    const { DepartmentID, DepartmentTitle, Manager, EmployeesCount } =
-      department;
+    const {
+      DepartmentID,
+      DepartmentTitle,
+      Manager,
+      EmployeesCount,
+    } = department;
 
     const subDepartments = depList.filter(
       (d) => d.ParentDepartmentID === DepartmentID
@@ -66,12 +77,54 @@ const OrgChartPage = () => {
     };
   };
 
+  const handleSwitchChart = () => {
+    inputRef.current?.click();
+
+    switch (typeChart) {
+      case "TB":
+        setTypeChart("RL");
+        break;
+      case "RL":
+        setTypeChart("TB");
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
+      <Space>
+        <Button
+          type="link"
+          icon={
+            typeChart === "RL" ? (
+              <FcParallelTasks
+                style={{ fontSize: "50px", transform: "rotate(180deg)" }}
+              />
+            ) : (
+              <FcFlowChart style={{ fontSize: "50px" }} />
+            )
+          }
+          onClick={handleSwitchChart}
+          ref={inputRef}
+        />
+      </Space>
       {departments.length > 0 && (
         <OrganizationGraph
           data={getNodes(departments)}
           behaviors={["drag-canvas", "zoom-canvas", "drag-node"]}
+          markerCfg={{
+            show: true,
+            collapsed: true,
+            position: "bottom",
+
+            //Width of Collapse Icon but didn`t Work
+
+            style: {
+              marginTop: "20px",
+            },
+          }}
           nodeCfg={{
             style: (node) => {
               return {
@@ -103,7 +156,6 @@ const OrgChartPage = () => {
                     fontSize: 20,
                     fontWeight: "bolder",
                   },
-                  // Unique field within group
                   name: `text-${Math.random()}`,
                 });
 
@@ -127,7 +179,6 @@ const OrgChartPage = () => {
                   font: {
                     size: 34,
                   },
-                  // Unique field within group
                   name: `text2-${Math.random()}`,
                 });
 
@@ -150,7 +201,6 @@ const OrgChartPage = () => {
                   alignItems: "center",
                   fontFamily: "Yekan",
                 },
-                // Unique field within group
                 name: `text3-${Math.random()}`,
               });
 
@@ -166,10 +216,10 @@ const OrgChartPage = () => {
                       ? `${fileBasicUrl}/${"member-profiles"}/${image}`
                       : "",
                   },
+
                   // Unique field within group
                   name: `text4-${Math.random()}`,
                 });
-
               return Math.max(
                 textShape1?.getBBox().height ?? 0,
                 textShape2?.getBBox().height ?? 0,
@@ -185,7 +235,7 @@ const OrgChartPage = () => {
             padding: 20,
           }}
           layout={{
-            direction: "TB",
+            direction: typeChart,
             getWidth: () => {
               return 300;
             },
@@ -199,11 +249,16 @@ const OrgChartPage = () => {
               return 25;
             },
           }}
-          onReady={(graph) => {
+          onReady={async (graph) => {
             graph.on("node:click", (evt) => {
               const item = evt.item._cfg;
-              handleShowModal(item.id, item.model.value.text);
+              const shape = evt.shape.cfg;
+
+              handleShowModal(item.id, item.model.value.text, shape.type);
             });
+            graph.toFullDataURL(() =>
+              message.success(Words.success_load_graph)
+            );
           }}
         />
       )}

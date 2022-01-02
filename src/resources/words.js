@@ -136,6 +136,11 @@ class Words extends Component {
   static back = "بازگشت";
 
   static dashboard = "داشبورد";
+  //-----------------------------
+
+  static success_load_graph = "چارت سازمانی با موفقیت بارگذاری شد";
+
+  //--------------------------------
   //----
   static official = "اداری";
   //----
