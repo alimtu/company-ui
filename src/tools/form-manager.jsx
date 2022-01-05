@@ -140,9 +140,8 @@ export const updateSavedRecords = (row, recordID, records, savedRow) => {
   if (row[recordID] === 0) {
     newRecords = [...records, savedRow];
   } else {
-    records[
-      records.findIndex((obj) => obj[recordID] === row[recordID])
-    ] = savedRow;
+    records[records.findIndex((obj) => obj[recordID] === row[recordID])] =
+      savedRow;
     newRecords = records;
   }
 
@@ -193,7 +192,7 @@ export const getColumns = (
   const { CanEdit, CanDelete } = access;
   let columns = baseColumns;
 
-  if (CanEdit || CanDelete) {
+  if (CanEdit || CanDelete || getOperationalButtons) {
     columns = [
       ...columns,
       {

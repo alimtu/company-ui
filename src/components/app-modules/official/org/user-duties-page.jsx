@@ -5,7 +5,7 @@ import { InfoCircleOutlined as InfoIcon } from "@ant-design/icons";
 import Words from "../../../../resources/words";
 import Colors from "../../../../resources/colors";
 import utils from "../../../../tools/utils";
-import service from "../../../../services/settings/org/role-duties-service";
+import service from "../../../../services/official/org/user-duties-service";
 import { BsFillCircleFill as FillCircleIcon } from "react-icons/bs";
 import {
   getSorter,
@@ -15,22 +15,37 @@ import {
 } from "../../../../tools/form-manager";
 import SimpleDataTable from "../../../common/simple-data-table";
 import SimpleDataPageHeader from "../../../common/simple-data-page-header";
-import RoleDutyModal from "./role-duty-modal";
-import RoleDutyDetailsModal from "./role-duty-details-modal";
+import DutyDetailsModal from "./user-duty-details-modal";
 import { usePageContext } from "../../../contexts/page-context";
 
 const { Text } = Typography;
 
 const getSheets = (records) => [
   {
-    title: "RoleDuties",
+    title: "Duties",
     data: records,
     columns: [
-      { label: Words.id, value: "RoleDutyID" },
-      { label: Words.role, value: "RoleTitle" },
-      { label: Words.duty_level, value: "LevelTitle" },
+      { label: Words.id, value: "DutyID" },
+      {
+        label: Words.type,
+        value: (record) =>
+          record.DutyType === "RoleBased" ? Words.by_role : Words.by_personal,
+      },
       { label: Words.title, value: "Title" },
+      { label: Words.duty_level, value: "LevelTitle" },
       { label: Words.descriptions, value: "DetailsText" },
+      {
+        label: Words.reg_member,
+        value: (record) => `${record.RegFirstName} ${record.RegLastName}`,
+      },
+      {
+        label: Words.reg_date,
+        value: (record) => utils.slashDate(record.RegDate),
+      },
+      {
+        label: Words.reg_time,
+        value: (record) => utils.colonTime(record.RegTime),
+      },
     ],
   },
 ];
@@ -38,35 +53,40 @@ const getSheets = (records) => [
 const baseColumns = [
   {
     title: Words.id,
-    width: 100,
+    width: 75,
     align: "center",
-    dataIndex: "RoleDutyID",
-    sorter: getSorter("RoleDutyID"),
-    render: (RoleDutyID) => <Text>{utils.farsiNum(`${RoleDutyID}`)}</Text>,
+    dataIndex: "DutyID",
+    sorter: getSorter("DutyID"),
+    render: (DutyID) => <Text>{utils.farsiNum(`${DutyID}`)}</Text>,
   },
   {
-    title: Words.role,
-    width: 200,
+    title: Words.duty_type,
+    width: 100,
     align: "center",
-    ellipsis: true,
-    // dataIndex: "First",
-    sorter: getSorter("RoleTitle"),
-    render: (record) => (
-      <Text style={{ color: Colors.blue[6] }}>{record.RoleTitle}</Text>
+    dataIndex: "DutyType",
+    sorter: getSorter("DutyType"),
+    render: (DutyType) => (
+      <Text
+        style={{
+          color: DutyType === "PersonalBased" ? Colors.green[7] : Colors.red[7],
+        }}
+      >
+        {DutyType === "PersonalBased" ? Words.by_personal : Words.by_role}
+      </Text>
     ),
   },
   {
     title: Words.title,
     width: 200,
-    align: "center",
+    align: "right",
     dataIndex: "Title",
     sorter: getSorter("Title"),
-    render: (Title) => <Text style={{ color: Colors.orange[6] }}>{Title}</Text>,
+    render: (Title) => <Text style={{ color: Colors.blue[7] }}>{Title}</Text>,
   },
   {
     title: Words.duty_level,
     width: 100,
-    align: "center",
+    align: "right",
     render: (record) => (
       <Space>
         <FillCircleIcon size={15} style={{ color: record.LevelColor }} />
@@ -77,9 +97,9 @@ const baseColumns = [
   },
 ];
 
-const recordID = "RoleDutyID";
+const recordID = "DutyID";
 
-const RoleDutiesPage = ({ pageName }) => {
+const UseDutiesPage = ({ pageName }) => {
   const {
     progress,
     searched,
@@ -91,7 +111,6 @@ const RoleDutiesPage = ({ pageName }) => {
     setAccess,
     selectedObject,
     setSelectedObject,
-    showModal,
     showDetails,
     setShowDetails,
   } = usePageContext();
@@ -102,13 +121,10 @@ const RoleDutiesPage = ({ pageName }) => {
   });
 
   const {
-    handleCloseModal,
     handleGetAll,
     handleSearch,
-    handleAdd,
     handleEdit,
     handleDelete,
-    handleSave,
     handleResetContext,
   } = GetSimplaDataPageMethods({
     service,
@@ -145,15 +161,15 @@ const RoleDutiesPage = ({ pageName }) => {
       <Spin spinning={progress}>
         <Row gutter={[10, 15]}>
           <SimpleDataPageHeader
-            title={Words.role_duties}
+            title={Words.your_duties}
             searchText={searchText}
             sheets={getSheets(records)}
-            fileName="RoleDuties"
+            fileName="YourDuties"
             onSearchTextChanged={(e) => setSearchText(e.target.value)}
             onSearch={handleSearch}
             onClear={() => setRecords([])}
             onGetAll={handleGetAll}
-            onAdd={access?.CanAdd && handleAdd}
+            onAdd={null}
           />
 
           <Col xs={24}>
@@ -164,17 +180,8 @@ const RoleDutiesPage = ({ pageName }) => {
         </Row>
       </Spin>
 
-      {showModal && (
-        <RoleDutyModal
-          onOk={handleSave}
-          onCancel={handleCloseModal}
-          isOpen={showModal}
-          selectedObject={selectedObject}
-        />
-      )}
-
       {showDetails && (
-        <RoleDutyDetailsModal
+        <DutyDetailsModal
           onOk={() => {
             setShowDetails(false);
             setSelectedObject(null);
@@ -187,4 +194,4 @@ const RoleDutiesPage = ({ pageName }) => {
   );
 };
 
-export default RoleDutiesPage;
+export default UseDutiesPage;

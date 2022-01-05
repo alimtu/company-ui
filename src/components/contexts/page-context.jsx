@@ -13,7 +13,6 @@ const PageContextProvider = ({ children }) => {
   const [selectedObject, setSelectedObject] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [searchFocus, setSearchFocus] = useState(false);
 
   const contextValue = {
     progress,
@@ -32,8 +31,6 @@ const PageContextProvider = ({ children }) => {
     setShowModal,
     showDetails,
     setShowDetails,
-    searchFocus,
-    setSearchFocus,
   };
 
   return (
@@ -50,7 +47,6 @@ const useResetContext = () => {
     setAccess,
     setSelectedObject,
     setShowModal,
-    setSearchFocus,
   } = usePageContext();
 
   const resetContext = () => {
@@ -61,7 +57,6 @@ const useResetContext = () => {
     setAccess(null);
     setSelectedObject(null);
     setShowModal(false);
-    setSearchFocus(false);
   };
 
   return resetContext;

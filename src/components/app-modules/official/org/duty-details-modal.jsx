@@ -2,10 +2,13 @@ import React from "react";
 import { Button, Modal, Row, Col, Typography, Alert, Descriptions } from "antd";
 import Words from "../../../../resources/words";
 import Colors from "../../../../resources/colors";
+import utils from "../../../../tools/utils";
 
 const { Text } = Typography;
 
-const RoleDutyDetailsModal = ({ duty, isOpen, onOk }) => {
+const DutyDetailsModal = ({ duty, isOpen, onOk }) => {
+  const valueColor = Colors.blue[7];
+
   return (
     <Modal
       visible={isOpen}
@@ -18,7 +21,7 @@ const RoleDutyDetailsModal = ({ duty, isOpen, onOk }) => {
         </Button>,
       ]}
       onCancel={onOk}
-      width={750}
+      width={650}
     >
       <section>
         <article
@@ -28,7 +31,11 @@ const RoleDutyDetailsModal = ({ duty, isOpen, onOk }) => {
         >
           <Row gutter={[10, 10]}>
             <Col xs={24}>
-              <Alert message={duty.RoleTitle} type="info" showIcon />
+              <Alert
+                message={utils.farsiNum(`${duty.Title}`)}
+                type="info"
+                showIcon
+              />
             </Col>
             <Col xs={24}>
               <Descriptions
@@ -41,9 +48,6 @@ const RoleDutyDetailsModal = ({ duty, isOpen, onOk }) => {
                 }}
                 size="middle"
               >
-                <Descriptions.Item label={Words.duty_title} span={2}>
-                  <Text style={{ color: Colors.green[7] }}>{duty.Title}</Text>
-                </Descriptions.Item>
                 {duty.DetailsText.length > 0 && (
                   <Descriptions.Item label={Words.descriptions} span={2}>
                     <Text
@@ -56,6 +60,20 @@ const RoleDutyDetailsModal = ({ duty, isOpen, onOk }) => {
                     </Text>
                   </Descriptions.Item>
                 )}
+                <Descriptions.Item label={Words.reg_member}>
+                  <Text style={{ color: valueColor }}>
+                    {`${duty.RegFirstName} ${duty.RegLastName}`}
+                  </Text>
+                </Descriptions.Item>
+                <Descriptions.Item label={Words.reg_date_time}>
+                  <Text style={{ color: valueColor }}>
+                    {utils.farsiNum(
+                      `${utils.slashDate(duty.RegDate)} - ${utils.colonTime(
+                        duty.RegTime
+                      )}`
+                    )}
+                  </Text>
+                </Descriptions.Item>
               </Descriptions>
             </Col>
           </Row>
@@ -65,4 +83,4 @@ const RoleDutyDetailsModal = ({ duty, isOpen, onOk }) => {
   );
 };
 
-export default RoleDutyDetailsModal;
+export default DutyDetailsModal;

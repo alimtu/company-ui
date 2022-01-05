@@ -9,6 +9,9 @@ import BasicInfoMenu from "../components/menus/settings/basic-info-menu";
 import OrgMenu from "../components/menus/settings/org-menu";
 import TimexMenu from "../components/menus/settings/timex-menu";
 //---
+import UserOfficialMenu from "../components/menus/official/user-official-menu";
+import UserOrgMenu from "../components/menus/official/user-org-menu";
+//---
 
 const MenuRoutes = ({ path }) => {
   return (
@@ -28,6 +31,14 @@ const MenuRoutes = ({ path }) => {
       />
       <ProtectedRoute path={`${path}/settings/org`} component={OrgMenu} />
       <ProtectedRoute path={`${path}/settings/timex`} component={TimexMenu} />
+      {/* ----------- */}
+      <ProtectedRoute
+        path={`${path}/official`}
+        exact
+        component={UserOfficialMenu}
+      />
+      <ProtectedRoute path={`${path}/official/org`} component={UserOrgMenu} />
+      {/* ----------- */}
 
       <ProtectedRoute path={`${path}/`} exact component={MainMenu} />
     </Switch>

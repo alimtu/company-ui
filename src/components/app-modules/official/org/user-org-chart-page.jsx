@@ -7,11 +7,11 @@ import { FcFlowChart, FcParallelTasks } from "react-icons/fc";
 //---
 import { fileBasicUrl } from "../../../../config.json";
 import utils from "../../../../tools/utils";
-import DepartmentMembersModal from "./department-members-modal";
+import DepartmentMembersModal from "../../settings/org/department-members-modal";
 import Words from "../../../../resources/words";
 //---
 
-const OrgChartPage = () => {
+const UserOrgChartPage = () => {
   const [departments, setDepartments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [departmentID, setDepartmentID] = useState(0);
@@ -280,4 +280,4 @@ const OrgChartPage = () => {
   );
 };
 
-export default OrgChartPage;
+export default UserOrgChartPage;

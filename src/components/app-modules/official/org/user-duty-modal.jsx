@@ -15,7 +15,7 @@ import {
 import DropdownItem from "../../../form-controls/dropdown-item";
 import TextItem from "../../../form-controls/text-item";
 import InputItem from "../../../form-controls/input-item";
-import service from "../../../../services/settings/org/personal-duties-service";
+import service from "../../../../services/official/org/user-members-duties-service";
 import utils from "../../../../tools/utils";
 import {
   useModalContext,
@@ -39,17 +39,35 @@ const schema = {
     .label(Words.descriptions),
 };
 
-const initRecord = {
-  PersonalDutyID: 0,
-  EmployeeID: 0,
-  LevelID: 0,
-  Title: "",
-  DetailsText: "",
+const initRecord = (employeeID) => {
+  return {
+    PersonalDutyID: 0,
+    EmployeeID: employeeID,
+    LevelID: 0,
+    Title: "",
+    DetailsText: "",
+  };
 };
 
 const formRef = React.createRef();
 
-const PersonalDutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
+const getSelectedPersonalDuty = (duty, employee) => {
+  return {
+    PersonalDutyID: duty.DutyID,
+    EmployeeID: employee.EmployeeID,
+    LevelID: duty.LevelID,
+    Title: duty.Title,
+    DetailsText: duty.DetailsText,
+  };
+};
+
+const UserDutyModal = ({
+  isOpen,
+  selectedObject,
+  employee,
+  onOk,
+  onCancel,
+}) => {
   const {
     progress,
     setProgress,
@@ -59,9 +77,12 @@ const PersonalDutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     setErrors,
     dutyLevels,
     setDutyLevels,
-    employees,
-    setEmployees,
   } = useModalContext();
+
+  const selectedDuty =
+    selectedObject !== null
+      ? getSelectedPersonalDuty(selectedObject, employee)
+      : null;
 
   const resetContext = useResetContext();
 
@@ -74,7 +95,7 @@ const PersonalDutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
   };
 
   const clearRecord = () => {
-    record.EmployeeID = 0;
+    record.EmployeeID = employee.EmployeeID;
     record.LevelID = 0;
     record.Title = "";
     record.DetailsText = "";
@@ -86,23 +107,16 @@ const PersonalDutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
 
   useMount(async () => {
     resetContext();
-    setRecord(initRecord);
-    initModal(formRef, selectedObject, setRecord);
+    setRecord(initRecord(employee.EmployeeID));
+    initModal(formRef, selectedDuty, setRecord);
 
     const data = await service.getParams();
 
     setDutyLevels(data.Levels);
-    setEmployees(data.Employees);
   });
 
   const handleSubmit = async () => {
-    saveModalChanges(
-      formConfig,
-      selectedObject,
-      setProgress,
-      onOk,
-      clearRecord
-    );
+    saveModalChanges(formConfig, selectedDuty, setProgress, onOk, clearRecord);
   };
 
   const isEdit = selectedObject !== null;
@@ -119,29 +133,13 @@ const PersonalDutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
     >
       <Form ref={formRef} name="dataForm">
         <Row gutter={[5, 1]} style={{ marginLeft: 1 }}>
-          {isEdit && (
-            <Col xs={24}>
-              <TextItem
-                title={Words.member}
-                value={`${record.FirstName} ${record.LastName}`}
-                valueColor={Colors.magenta[6]}
-              />
-            </Col>
-          )}
-
-          {!isEdit && (
-            <Col xs={24}>
-              <DropdownItem
-                title={Words.employee}
-                dataSource={employees}
-                keyColumn="EmployeeID"
-                valueColumn="FullName"
-                formConfig={formConfig}
-                required
-                autoFocus
-              />
-            </Col>
-          )}
+          <Col xs={24}>
+            <TextItem
+              title={Words.employee}
+              value={`${employee.FirstName} ${employee.LastName}`}
+              valueColor={Colors.magenta[6]}
+            />
+          </Col>
           <Col xs={24}>
             <DropdownItem
               title={Words.duty_level}
@@ -173,12 +171,13 @@ const PersonalDutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
               formConfig={formConfig}
             />
           </Col>
+
           {isEdit && (
             <>
               <Col xs={24} ms={12}>
                 <TextItem
                   title={Words.reg_member}
-                  value={`${record.RegFirstName} ${record.RegLastName}`}
+                  value={`${selectedObject.RegFirstName} ${selectedObject.RegLastName}`}
                   valueColor={Colors.magenta[6]}
                 />
               </Col>
@@ -186,8 +185,8 @@ const PersonalDutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
                 <TextItem
                   title={Words.reg_date_time}
                   value={utils.formattedDateTime(
-                    record.RegDate,
-                    record.RegTime
+                    selectedObject.RegDate,
+                    selectedObject.RegTime
                   )}
                   valueColor={Colors.magenta[6]}
                 />
@@ -200,4 +199,4 @@ const PersonalDutyModal = ({ isOpen, selectedObject, onOk, onCancel }) => {
   );
 };
 
-export default PersonalDutyModal;
+export default UserDutyModal;

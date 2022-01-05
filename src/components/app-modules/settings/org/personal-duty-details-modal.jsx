@@ -84,7 +84,12 @@ const PersonalDutyDetailsModal = ({ duty, isOpen, onOk }) => {
                 </Descriptions.Item>
                 {duty.DetailsText.length > 0 && (
                   <Descriptions.Item label={Words.descriptions} span={2}>
-                    <Text style={{ color: Colors.purple[7] }}>
+                    <Text
+                      style={{
+                        color: Colors.purple[7],
+                        whiteSpace: "pre-line",
+                      }}
+                    >
                       {duty.DetailsText}
                     </Text>
                   </Descriptions.Item>

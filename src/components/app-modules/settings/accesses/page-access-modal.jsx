@@ -354,65 +354,63 @@ const PageAccessModal = ({ employee, isOpen, onOk }) => {
                               tab={module.ModuleTitle}
                               key={module.ModuleID}
                             >
-                              <Row>
-                                {module.Pages.map((page) => (
-                                  <>
-                                    <Col xs={24}>
-                                      <Text style={{ color: Colors.red[6] }}>
-                                        {page.PageTitle}
-                                      </Text>
-                                    </Col>
-                                    <Col xs={24}>
-                                      <Space
-                                        direction="vertical"
+                              {module.Pages.map((page) => (
+                                <Row key={page.PageID}>
+                                  <Col xs={24}>
+                                    <Text style={{ color: Colors.red[6] }}>
+                                      {page.PageTitle}
+                                    </Text>
+                                  </Col>
+                                  <Col xs={24}>
+                                    <Space
+                                      direction="vertical"
+                                      style={{
+                                        width: "100%",
+                                      }}
+                                    >
+                                      <Row>
+                                        <Col xs={12} md={6}>
+                                          <CheckAccess
+                                            onChange={onCheckChange}
+                                            page={page}
+                                            accessType="view"
+                                          />
+                                        </Col>
+                                        <Col xs={12} md={6}>
+                                          <CheckAccess
+                                            onChange={onCheckChange}
+                                            page={page}
+                                            accessType="add"
+                                          />
+                                        </Col>
+                                        <Col xs={12} md={6}>
+                                          <CheckAccess
+                                            onChange={onCheckChange}
+                                            page={page}
+                                            accessType="edit"
+                                          />
+                                        </Col>
+                                        <Col xs={12} md={6}>
+                                          <CheckAccess
+                                            onChange={onCheckChange}
+                                            page={page}
+                                            accessType="delete"
+                                          />
+                                        </Col>
+                                      </Row>
+
+                                      <div
                                         style={{
                                           width: "100%",
+                                          height: "1px",
+                                          borderBottom: "1px dashed grey",
+                                          marginBottom: 10,
                                         }}
-                                      >
-                                        <Row>
-                                          <Col xs={12} md={6}>
-                                            <CheckAccess
-                                              onChange={onCheckChange}
-                                              page={page}
-                                              accessType="view"
-                                            />
-                                          </Col>
-                                          <Col xs={12} md={6}>
-                                            <CheckAccess
-                                              onChange={onCheckChange}
-                                              page={page}
-                                              accessType="add"
-                                            />
-                                          </Col>
-                                          <Col xs={12} md={6}>
-                                            <CheckAccess
-                                              onChange={onCheckChange}
-                                              page={page}
-                                              accessType="edit"
-                                            />
-                                          </Col>
-                                          <Col xs={12} md={6}>
-                                            <CheckAccess
-                                              onChange={onCheckChange}
-                                              page={page}
-                                              accessType="delete"
-                                            />
-                                          </Col>
-                                        </Row>
-
-                                        <div
-                                          style={{
-                                            width: "100%",
-                                            height: "1px",
-                                            borderBottom: "1px dashed grey",
-                                            marginBottom: 10,
-                                          }}
-                                        />
-                                      </Space>
-                                    </Col>
-                                  </>
-                                ))}
-                              </Row>
+                                      />
+                                    </Space>
+                                  </Col>
+                                </Row>
+                              ))}
                             </TabPane>
                           ))}
                         </Tabs>

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Col, Typography, Input, Space, Tooltip, Button } from "antd";
 import {
   ReloadOutlined as ReloadIcon,
@@ -22,16 +22,7 @@ const SimpleDataPageHeader = ({
   onClear,
   onGetAll,
   onAdd,
-  searchFocus,
 }) => {
-  const inputRef = useRef(null);
-
-  if (searchFocus) {
-    inputRef.current?.focus();
-  } else {
-    inputRef.current?.blur();
-  }
-
   return (
     <>
       <Col xs={24}>
@@ -56,7 +47,6 @@ const SimpleDataPageHeader = ({
           value={searchText}
           enterButton
           allowClear
-          ref={inputRef}
         />
       </Col>
 

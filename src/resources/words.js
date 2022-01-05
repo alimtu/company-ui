@@ -134,13 +134,14 @@ class Words extends Component {
   static can_delete = "امکان حذف";
   static can_view = "امکان مشاهده";
   static back = "بازگشت";
+  static your_duties = "شرح وظایف شما";
+  static member_duties = "شرح وظایف پرسنل";
+  static duty_type = "نوع وظیفه";
+  static by_personal = "فردی";
+  static by_role = "سمت";
+  static by_role_personal = "سمت - فردی";
 
   static dashboard = "داشبورد";
-  //-----------------------------
-
-  static success_load_graph = "چارت سازمانی با موفقیت بارگذاری شد";
-
-  //--------------------------------
   //----
   static official = "اداری";
   //----
@@ -197,6 +198,7 @@ class Words extends Component {
     no_national_code: "کدملی وارد نشده است",
     page_not_found: "صفحه مورد درخواست شما یافت نشد",
     invalid_access_page: "متاسفانه مجاز به دیدن این صفحه نمی باشید",
+    success_load_graph: "چارت سازمانی با موفقیت بارگذاری شد",
   };
 
   static questions = {

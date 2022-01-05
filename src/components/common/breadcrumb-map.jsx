@@ -6,11 +6,15 @@ import Words from "../../resources/words";
 const BreadcrumbMap = ({ location }) => {
   const breadcrumbNameMap = {
     "/home": Words.dashboard,
+    //---
     "/home/settings": Words.settings,
     "/home/settings/accesses": Words.accesses,
     "/home/settings/basic-info": Words.basic_settings,
     "/home/settings/org": Words.org_structure,
     "/home/settings/timex": Words.timex_settings,
+    //---
+    "/home/official": Words.official,
+    "/home/official/org": Words.org_structure,
   };
 
   const pathSnippets = location.pathname.split("/").filter((i) => i);

@@ -19,17 +19,17 @@ const mapper = (moduleID) => {
   let icon = null;
 
   switch (moduleID) {
-    case 2:
+    case 5:
       link = "org";
       icon = <OrgIcon style={{ color: Colors.blue[6] }} size={iconSize} />;
       break;
 
-    case 3:
+    case 6:
       link = "timex";
       icon = <TimexIcon style={{ color: Colors.orange[6] }} size={iconSize} />;
       break;
 
-    case 4:
+    case 7:
       link = "automation";
       icon = (
         <AutomationIcon style={{ color: Colors.red[6] }} size={iconSize} />
@@ -43,7 +43,7 @@ const mapper = (moduleID) => {
   return { link, icon };
 };
 
-const OfficialMenu = () => {
+const UserOfficialMenu = () => {
   const [accessibleModules, setAccessibleModules] = useState([]);
 
   useMount(async () => {
@@ -77,4 +77,4 @@ const OfficialMenu = () => {
   );
 };
 
-export default OfficialMenu;
+export default UserOfficialMenu;

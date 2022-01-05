@@ -81,7 +81,7 @@ const CompanyAgentDetailsModal = ({ agent, isOpen, onOk }) => {
                   </Text>
                 </Descriptions.Item>
                 <Descriptions.Item label={Words.descriptions} span={2}>
-                  <Text style={{ color: valueColor, whiteSpace: "pre" }}>
+                  <Text style={{ color: valueColor, whiteSpace: "pre-line" }}>
                     {utils.farsiNum(`${agent.DetailsText}`)}
                   </Text>
                 </Descriptions.Item>
