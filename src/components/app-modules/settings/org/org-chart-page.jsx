@@ -2,26 +2,24 @@ import React, { useState, useRef, useEffect } from "react";
 import { useMount } from "react-use";
 import service from "../../../../services/settings/org/departments-service";
 import { OrganizationGraph } from "@ant-design/charts";
-import { Button, Space /*, message */, Row, Col, Typography, Spin } from "antd";
-import { FcFlowChart, FcParallelTasks } from "react-icons/fc";
+import { Button, Space, Row, Typography, Spin } from "antd";
+import { FcParallelTasks } from "react-icons/fc";
 //---
 import { fileBasicUrl } from "../../../../config.json";
 import utils from "../../../../tools/utils";
 import DepartmentMembersModal from "../../settings/org/department-members-modal";
 import Words from "../../../../resources/words";
 import {
-  AiOutlineFullscreenExit,
   AiOutlineFullscreen,
   AiOutlineZoomIn,
   AiOutlineZoomOut,
 } from "react-icons/ai";
 import { useModalContext } from "../../../contexts/modal-context";
-
 //---
 
 const { Text } = Typography;
 
-const UserOrgChartPage = ({ screen }) => {
+const UserOrgChartPage = () => {
   const [departments, setDepartments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [departmentID, setDepartmentID] = useState(0);
