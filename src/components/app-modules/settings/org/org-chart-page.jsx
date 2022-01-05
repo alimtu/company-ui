@@ -1,29 +1,46 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useMount } from "react-use";
 import service from "../../../../services/settings/org/departments-service";
 import { OrganizationGraph } from "@ant-design/charts";
+import { Button, Space /*, message */, Row, Col, Typography, Spin } from "antd";
+import { FcFlowChart, FcParallelTasks } from "react-icons/fc";
 //---
 import { fileBasicUrl } from "../../../../config.json";
 import utils from "../../../../tools/utils";
-import DepartmentMembersModal from "./department-members-modal";
+import DepartmentMembersModal from "../../settings/org/department-members-modal";
 import Words from "../../../../resources/words";
-import { Button, Space, message } from "antd";
-import { FcFlowChart, FcParallelTasks } from "react-icons/fc";
+import {
+  AiOutlineFullscreenExit,
+  AiOutlineFullscreen,
+  AiOutlineZoomIn,
+  AiOutlineZoomOut,
+} from "react-icons/ai";
+import { useModalContext } from "../../../contexts/modal-context";
 
-const OrgChartPage = () => {
+//---
+
+const { Text } = Typography;
+
+const UserOrgChartPage = ({ screen }) => {
   const [departments, setDepartments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [departmentID, setDepartmentID] = useState(0);
   const [departmentTitle, setDepartmentTitle] = useState("");
-  //............
-  const [typeChart, setTypeChart] = useState("TB");
+  const [chartType, setChartType] = useState("TB");
+  const [chartTypes] = useState([
+    { deg: 90, name: "TB" },
+    { deg: 270, name: "BT" },
+    { deg: 0, name: "LR" },
+    { deg: 180, name: "RL" },
+  ]);
 
-  const inputRef = useRef(null);
+  const { progress, setProgress } = useModalContext();
 
   useMount(async () => {
+    setProgress(true);
     const data = await service.getAllData();
-
     setDepartments(data);
+    setProgress(false);
   });
 
   const handleShowModal = (departmentID, departmentTitle, shape) => {
@@ -77,65 +94,128 @@ const OrgChartPage = () => {
     };
   };
 
-  const handleSwitchChart = () => {
-    inputRef.current?.click();
-
-    switch (typeChart) {
-      case "TB":
-        setTypeChart("RL");
-        break;
-      case "RL":
-        setTypeChart("TB");
-        break;
-      default:
-        break;
-    }
-  };
-
-  return (
-    <>
-      <Space>
-        <Button
-          type="link"
-          icon={
-            typeChart === "RL" ? (
-              <FcParallelTasks
-                style={{ fontSize: "50px", transform: "rotate(180deg)" }}
-              />
-            ) : (
-              <FcFlowChart style={{ fontSize: "50px" }} />
-            )
-          }
-          onClick={handleSwitchChart}
-          ref={inputRef}
-        />
-      </Space>
-      {departments.length > 0 && (
+  const organizChart = () => {
+    return (
+      <>
         <OrganizationGraph
           data={getNodes(departments)}
+          style={{ width: "100vw", height: "110vh" }}
+          toolbarCfg={{
+            show: true,
+            zoomFactor: 5,
+            renderIcon: (
+              zoomIn = () => {},
+              zoomOut = () => {},
+              toggleFullscreen = () => {},
+              handleSwitchChart = (name) => {
+                setChartType(name);
+              }
+            ) => (
+              <Space align="center">
+                <Button
+                  type="link"
+                  onClick={zoomIn}
+                  icon={<AiOutlineZoomIn />}
+                />
+                <Button
+                  type="link"
+                  onClick={zoomOut}
+                  icon={<AiOutlineZoomOut />}
+                />
+                <Button
+                  type="link"
+                  onClick={toggleFullscreen}
+                  icon={<AiOutlineFullscreen />}
+                />
+                {chartTypes.map((t, inx) => (
+                  <Button
+                    key={inx}
+                    type="link"
+                    icon={
+                      <FcParallelTasks
+                        style={{
+                          fontSize: "15px",
+                          transform: `rotate(${t.deg}deg)`,
+                        }}
+                      />
+                    }
+                    onClick={() => handleSwitchChart(t.name)}
+                  />
+                ))}
+              </Space>
+            ),
+          }}
           behaviors={["drag-canvas", "zoom-canvas", "drag-node"]}
           markerCfg={{
             show: true,
             collapsed: true,
             position: "bottom",
-
-            //Width of Collapse Icon but didn`t Work
-
-            style: {
-              marginTop: "20px",
+          }}
+          tooltipCfg={{
+            className: "tooltipOrg",
+            show: true,
+            style: { width: "auto" },
+            customContent: (item) => (
+              <Row
+                align="middle"
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <Text style={{ fontSize: "smaller", color: "blue" }}>
+                  {item.value.text}
+                </Text>
+                <Text style={{ fontSize: "smaller" }}>
+                  {item.value.fullName
+                    ? `${Words.department_manager} : ${item.value.fullName}`
+                    : Words.no_department_manager}
+                </Text>
+                <Text style={{ fontSize: "smaller" }}>
+                  {item.value.employeesCount > 0
+                    ? `${Words.employees} : ${utils.farsiNum(
+                        item.value.employeesCount
+                      )} ${Words.nafar}`
+                    : Words.no_employee}
+                </Text>
+              </Row>
+            ),
+          }}
+          layout={{
+            direction: chartType,
+            getWidth: () => {
+              return 300;
+            },
+            getHeight: () => {
+              return 100;
+            },
+            getVGap: () => {
+              return 25;
+            },
+            getHGap: () => {
+              return 25;
             },
           }}
           nodeCfg={{
             style: (node) => {
-              return {
-                fill: "#B1ABF4",
-                stroke: "blue",
-                textAlign: "center",
-                justifyContent: "center",
-                alignItems: "center",
-              };
+              if (node.children.length > 0) {
+                return {
+                  fill: "#5B8FF9",
+                  stroke: "blue",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                };
+              } else {
+                return {
+                  fill: "#B1ABF4",
+                  stroke: "blue",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                };
+              }
             },
+
             size: [260, 100],
+
             customContent: (item, group, cfg) => {
               const { startX, startY, width } = cfg;
               const { text, image, fullName, employeesCount } = item;
@@ -156,6 +236,7 @@ const OrgChartPage = () => {
                     fontSize: 20,
                     fontWeight: "bolder",
                   },
+                  // Unique field within group
                   name: `text-${Math.random()}`,
                 });
 
@@ -179,6 +260,7 @@ const OrgChartPage = () => {
                   font: {
                     size: 34,
                   },
+                  // Unique field within group
                   name: `text2-${Math.random()}`,
                 });
 
@@ -201,6 +283,7 @@ const OrgChartPage = () => {
                   alignItems: "center",
                   fontFamily: "Yekan",
                 },
+                // Unique field within group
                 name: `text3-${Math.random()}`,
               });
 
@@ -216,10 +299,10 @@ const OrgChartPage = () => {
                       ? `${fileBasicUrl}/${"member-profiles"}/${image}`
                       : "",
                   },
-
                   // Unique field within group
                   name: `text4-${Math.random()}`,
                 });
+
               return Math.max(
                 textShape1?.getBBox().height ?? 0,
                 textShape2?.getBBox().height ?? 0,
@@ -228,53 +311,38 @@ const OrgChartPage = () => {
               );
             },
           }}
-          minimapCfg={{
-            show: true,
-            type: "keyShape",
-            refresh: true,
-            padding: 20,
-          }}
-          layout={{
-            direction: typeChart,
-            getWidth: () => {
-              return 300;
-            },
-            getHeight: () => {
-              return 100;
-            },
-            getVGap: () => {
-              return 25;
-            },
-            getHGap: () => {
-              return 25;
-            },
-          }}
-          onReady={async (graph) => {
+          onReady={(graph) => {
             graph.on("node:click", (evt) => {
               const item = evt.item._cfg;
               const shape = evt.shape.cfg;
 
               handleShowModal(item.id, item.model.value.text, shape.type);
             });
-            graph.toFullDataURL(() =>
-              message.success(Words.success_load_graph)
-            );
+            graph.zoom(0.4, { x: 100, y: 300 });
           }}
         />
-      )}
+      </>
+    );
+  };
 
-      {showModal && (
-        <DepartmentMembersModal
-          onOk={() => {
-            setShowModal(false);
-          }}
-          isOpen={showModal}
-          departmentID={departmentID}
-          departmentTitle={departmentTitle}
-        />
-      )}
+  return (
+    <>
+      <Spin spinning={progress} tip={Words.please_wait}>
+        {departments.length > 0 && organizChart(chartType)}
+
+        {showModal && (
+          <DepartmentMembersModal
+            onOk={() => {
+              setShowModal(false);
+            }}
+            isOpen={showModal}
+            departmentID={departmentID}
+            departmentTitle={departmentTitle}
+          />
+        )}
+      </Spin>
     </>
   );
 };
 
-export default OrgChartPage;
+export default UserOrgChartPage;
