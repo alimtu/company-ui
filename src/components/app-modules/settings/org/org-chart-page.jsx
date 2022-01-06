@@ -144,11 +144,6 @@ const OrgChartPage = () => {
             ),
           }}
           behaviors={["drag-canvas", "zoom-canvas", "drag-node"]}
-          markerCfg={{
-            show: true,
-            collapsed: true,
-            position: "bottom",
-          }}
           tooltipCfg={{
             className: "tooltipOrg",
             show: true,
@@ -190,6 +185,13 @@ const OrgChartPage = () => {
             getHGap: () => {
               return 25;
             },
+          }}
+          markerCfg={(node) => {
+            return {
+              show: node.children.length > 0 ? true : false,
+              collapsed: true,
+              position: "bottom",
+            };
           }}
           nodeCfg={{
             style: (node) => {

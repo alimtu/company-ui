@@ -144,10 +144,12 @@ const UserOrgChartPage = () => {
             ),
           }}
           behaviors={["drag-canvas", "zoom-canvas", "drag-node"]}
-          markerCfg={{
-            show: true,
-            collapsed: true,
-            position: "bottom",
+          markerCfg={(node) => {
+            return {
+              show: node.children.length > 0 ? true : false,
+              collapsed: true,
+              position: "bottom",
+            };
           }}
           tooltipCfg={{
             className: "tooltipOrg",
